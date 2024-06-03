@@ -16,5 +16,5 @@ More features are in development:
 
 * Coded in pure C#, without extra effort to migrate from.
 * Frequently accessed data is compact in memory compared to Jitter1, which benefits from spatial local optimization.
-* Neat and easy to understand. Faster for users to their put hands to introduce more features, and make things under their control.
+* Neat and easy to understand. Faster for users to put their hands to introduce more features, and make things under their control.
 * Well optimized in data structure and algorithms.
