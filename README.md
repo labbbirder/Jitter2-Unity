@@ -10,3 +10,11 @@ More features are in development:
 * world serialization(most for remote machine)
 * deterministic math (reside in specific branch)
 * more physics-world-authoring components in Unity editor side
+
+
+## Why Jitter2
+
+* Coded in pure C#, without extra effort to migrate from.
+* Frequently accessed data is compact in memory compared to Jitter1, which benefits from spatial local optimization.
+* Neat and easy to understand. Faster for users to their put hands to introduce more features, and make things under their control.
+* Well optimized in data structure and algorithms.
