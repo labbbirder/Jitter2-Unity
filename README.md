@@ -1,6 +1,6 @@
 # Jitter-Unity
 
-This is an edition from [JitterPhysics2](https://github.com/notgiven688/jitterphysics2), with a license of [MIT](https://github.com/notgiven688/jitterphysics2/blob/main/LICENSE).
+This is an edition from [JitterPhysics2](https://github.com/notgiven688/jitterphysics2), with a license of [MIT](https://github.com/notgiven688/jitterphysics2/blob/main/LICENSE), based on the latest release [2.3.1](https://jitterphysics.com/docs/changelog#jitter-231-06-02-2024).
 
 This edition make it compatible with Unity3D, ~~with a few acceptable disadvantages in performance.~~ (just forget about it)
 
