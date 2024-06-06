@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Jitter2;
 using Jitter2.Collision.Shapes;
+using Jitter2.DataStructures;
 using Jitter2.LinearMath;
 using UnityEngine;
 

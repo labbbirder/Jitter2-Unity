@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections.Generic;
+using Jitter2.Sync;
 using Jitter2.UnmanagedMemory;
 
 namespace Jitter2.Dynamics
@@ -30,14 +31,22 @@ namespace Jitter2.Dynamics
     /// <summary>
     /// Holds a reference to all contacts (maximum 4) between two shapes.
     /// </summary>
-    public class Arbiter
+    public partial class Arbiter
     {
         internal static Stack<Arbiter> Pool = new();
 
+        [State]
         public RigidBody Body1 = null!;
+        [State]
         public RigidBody Body2 = null!;
 
+        [State(handleIndex = HandleIndex.CONTACT_DATA)]
         public JHandle<ContactData> Handle;
+
+        public override int GetHashCode()
+        {
+            return Body1.GetHashCode() ^ Body2.GetHashCode();
+        }
     }
 
     /// <summary>

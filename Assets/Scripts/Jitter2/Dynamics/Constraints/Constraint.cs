@@ -56,7 +56,7 @@ namespace Jitter2.Dynamics.Constraints
     /// <summary>
     /// The base class for constraints.
     /// </summary>
-    public abstract class Constraint : IDebugDrawable
+    public abstract partial class Constraint : IDebugDrawable
     {
         public RigidBody Body1 { private set; get; } = null!;
         public RigidBody Body2 { private set; get; } = null!;
@@ -80,6 +80,11 @@ namespace Jitter2.Dynamics.Constraints
 
         internal Constraint()
         {
+        }
+
+        public override int GetHashCode()
+        {
+            return Body1.GetHashCode() ^ Body2.GetHashCode();
         }
 
         protected unsafe delegate*<ref ConstraintData, float, void> iterate = null;

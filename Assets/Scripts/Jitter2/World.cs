@@ -34,6 +34,7 @@ using Jitter2.DataStructures;
 using Jitter2.Dynamics;
 using Jitter2.Dynamics.Constraints;
 using Jitter2.LinearMath;
+using Jitter2.Sync;
 using Jitter2.UnmanagedMemory;
 
 namespace Jitter2
@@ -74,9 +75,13 @@ namespace Jitter2
             public readonly Span<SmallConstraintData> SmallConstraints => world.memSmallConstraints.Elements;
         }
 
+        [State(handleIndex = HandleIndex.CONTACT_DATA, Order = -1)]
         private readonly UnmanagedActiveList<ContactData> memContacts;
+        [State(handleIndex = HandleIndex.RIGID_BODY_DATA, Order = -1)]
         private readonly UnmanagedActiveList<RigidBodyData> memRigidBodies;
+        [State(handleIndex = HandleIndex.CONSTRAINT_DATA, Order = -1)]
         private readonly UnmanagedActiveList<ConstraintData> memConstraints;
+        [State(handleIndex = HandleIndex.SMALL_CONSTRAINT_DATA, Order = -1)]
         private readonly UnmanagedActiveList<SmallConstraintData> memSmallConstraints;
 
         public delegate void WorldStep(float dt);
@@ -91,18 +96,23 @@ namespace Jitter2
         /// </summary>
         public SpanData RawData => new(this);
 
+        [State]
         private readonly Dictionary<ArbiterKey, Arbiter> arbiters = new();
 
+        [State]
         private readonly ActiveList<Island> islands = new();
+        [State]
         private readonly ActiveList<RigidBody> bodies = new();
+        [State]
         private readonly ActiveList<Shape> shapes = new();
 
-        private static long _idCounter;
+        [State]
+        private long _idCounter;
 
         /// <summary>
         /// Generates a unique ID.
         /// </summary>
-        public static long RequestId()
+        public long RequestId()
         {
             return Interlocked.Increment(ref _idCounter);
         }
@@ -114,7 +124,7 @@ namespace Jitter2
         /// <returns>A tuple containing the minimum and maximum request IDs in the generated range. The upper
         /// bound is exclusive.</returns>
         /// <exception cref="ArgumentOutOfRangeException">Thrown when count is less than 1.</exception>
-        public static (long min, long max) RequestId(int count)
+        public (long min, long max) RequestId(int count)
         {
             if (count < 1) throw new ArgumentOutOfRangeException(nameof(count), "Count must be greater zero.");
             long count64 = count;
@@ -150,12 +160,14 @@ namespace Jitter2
         /// Access to the <see cref="DynamicTree"/> instance. The instance
         /// should only be modified by Jitter.
         /// </summary>
+        [State]
         public readonly DynamicTree<Shape> DynamicTree;
 
         /// <summary>
         /// A fixed body, pinned to the world. Can be used to create constraints with.
         /// </summary>
-        public RigidBody NullBody { get; }
+        [State]
+        public RigidBody NullBody { get; private set; }
 
         /// <summary>
         /// Specifies whether the deactivation mechanism of Jitter is enabled.
@@ -201,6 +213,7 @@ namespace Jitter2
             }
         }
 
+        [State]
         private JVector gravity = new(0, -9.81f, 0);
 
         /// <summary>
@@ -392,7 +405,7 @@ namespace Jitter2
             {
                 throw new ArgumentException("Shape can not be added. Is the shape already registered?");
             }
-
+            if (shape.ShapeId == -1) shape.ShapeId = RequestId();
             shapes.Add(shape, active);
             shape.UpdateWorldBoundingBox();
             DynamicTree.AddProxy(shape);

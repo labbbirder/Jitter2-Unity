@@ -25,6 +25,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using Jitter2.Sync;
 
 namespace Jitter2.DataStructures
 {
@@ -33,7 +34,7 @@ namespace Jitter2.DataStructures
         int ListIndex { get; set; }
     }
 
-    public class ReadOnlyActiveList<T> : IEnumerable<T> where T : class, IListIndex
+    public class ReadOnlyActiveList<T> : IEnumerable<T> where T : class, IListIndex//, ISync
     {
         private readonly ActiveList<T> list;
 
@@ -75,7 +76,7 @@ namespace Jitter2.DataStructures
     /// calls to <see cref="ActiveList{T}.Add(T, bool)"/>, <see cref="ActiveList{T}.Remove(T)"/>, <see
     /// cref="ActiveList{T}.MoveToActive(T)"/>, or <see cref="ActiveList{T}.MoveToInactive(T)"/>.
     /// </summary>
-    public class ActiveList<T> : IEnumerable<T> where T : class, IListIndex
+    public partial class ActiveList<T> : IEnumerable<T> where T : class, IListIndex//, ISync
     {
         public struct Enumerator : IEnumerator<T>
         {
@@ -130,12 +131,12 @@ namespace Jitter2.DataStructures
 
         public void Clear()
         {
-            for (int i = 0; i < Count; i++) 
+            for (int i = 0; i < Count; i++)
             {
                 elements[i].ListIndex = -1;
                 elements[i] = null!;
             }
-        
+
             Count = 0;
             Active = 0;
         }
@@ -196,7 +197,7 @@ namespace Jitter2.DataStructures
             MoveToInactive(element);
 
             int li = element.ListIndex;
-        
+
             Count -= 1;
 
             elements[li] = elements[Count];

@@ -23,6 +23,7 @@
 
 using System.Collections.Generic;
 using Jitter2.LinearMath;
+using Jitter2.Sync;
 
 namespace Jitter2.Collision.Shapes
 {
@@ -32,9 +33,11 @@ namespace Jitter2.Collision.Shapes
     /// For performance optimization, this shape should ideally be used for a small number of points (maximum
     /// of 20-30).
     /// </summary>
-    public class PointCloudShape : Shape
+    public partial class PointCloudShape : Shape
     {
+        [State]
         private List<JVector> vertices;
+        [State]
         private JVector shifted;
 
         /// <summary>

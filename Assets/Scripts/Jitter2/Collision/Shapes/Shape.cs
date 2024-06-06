@@ -25,6 +25,7 @@ using System;
 using Jitter2.DataStructures;
 using Jitter2.Dynamics;
 using Jitter2.LinearMath;
+using Jitter2.Sync;
 
 namespace Jitter2.Collision.Shapes
 {
@@ -34,7 +35,7 @@ namespace Jitter2.Collision.Shapes
     /// The shape itself does not have a position or orientation. Shapes can be associated with 
     /// instances of <see cref="RigidBody"/>.
     /// </summary>
-    public abstract class Shape : ISupportMap, IListIndex, IDynamicTreeProxy
+    public abstract partial class Shape : ISupportMap, IListIndex, IDynamicTreeProxy
     {
         int IListIndex.ListIndex { get; set; } = -1;
 
@@ -42,11 +43,12 @@ namespace Jitter2.Collision.Shapes
         /// A 64-bit integer representing the shape ID. This is used by algorithms that require 
         /// arranging shapes in a well-defined order.
         /// </summary>
-        public readonly long ShapeId;
+        [State]
+        public long ShapeId { get; internal set; } = -1;
 
         public Shape()
         {
-            ShapeId = World.RequestId();
+            // ShapeId = World.RequestId();
         }
 
         internal bool AttachRigidBody(RigidBody body)
@@ -70,31 +72,37 @@ namespace Jitter2.Collision.Shapes
         /// <summary>
         /// The instance of <see cref="RigidBody"/> to which this shape is attached.
         /// </summary>
+        [State]
         public RigidBody RigidBody { get; private set; }
 
         /// <summary>
         /// The bounding box of the shape in world space. It is automatically updated when the position or
         /// orientation of the corresponding instance of <see cref="RigidBody"/> changes.
         /// </summary>
+        [State]
         public JBBox WorldBoundingBox { get; protected set; }
 
         /// <summary>
         /// The inertia of the shape, assuming a homogeneous unit-mass density.
         /// The inertia is calculated with respect to the origin, not necessarily the center of mass.
         /// </summary>
+        [State]
         public JMatrix Inertia { get; protected set; }
 
         /// <summary>
         /// The geometric center of the shape, equivalent to the center of mass when assuming a
         /// homogeneous unit-mass density.
         /// </summary>
+        [State]
         public JVector GeometricCenter { get; protected set; }
 
         /// <summary>
         /// The mass of the shape, assuming a homogeneous unit-mass density.
         /// </summary>
+        [State]
         public float Mass { get; protected set; }
 
+        [State(Format = "({0} as IDynamicTreeProxy)")]
         int IDynamicTreeProxy.NodePtr { get; set; }
 
         public virtual JVector Velocity => RigidBody != null ? RigidBody.Velocity : JVector.Zero;

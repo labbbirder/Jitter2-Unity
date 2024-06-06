@@ -6,7 +6,7 @@ public class JitterGizmosDrawer : IDebugDrawer
 {
     static JitterGizmosDrawer m_Instance;
     public static JitterGizmosDrawer Instance => m_Instance ??= new();
-    readonly Color color = Color.green;
+    public Color color { get; set; } = Color.green;
     public void DrawPoint(in JVector p)
     {
         Gizmos.color = color;

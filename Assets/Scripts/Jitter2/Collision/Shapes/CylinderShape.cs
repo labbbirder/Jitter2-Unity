@@ -23,15 +23,18 @@
 
 using System;
 using Jitter2.LinearMath;
+using Jitter2.Sync;
 
 namespace Jitter2.Collision.Shapes
 {
     /// <summary>
     /// Represents a cylinder shape.
     /// </summary>
-    public class CylinderShape : Shape
+    public partial class CylinderShape : Shape
     {
+        [State]
         private float radius;
+        [State]
         private float height;
 
         /// <summary>

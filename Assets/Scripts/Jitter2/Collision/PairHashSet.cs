@@ -25,6 +25,7 @@ using System;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using Jitter2.Sync;
 
 namespace Jitter2.Collision
 {
@@ -33,7 +34,7 @@ namespace Jitter2.Collision
     /// all potential overlapping pairs of shapes. The implementation is based
     /// on open addressing.
     /// </summary>
-    public class PairHashSet
+    public partial class PairHashSet
     {
         [StructLayout(LayoutKind.Explicit, Size = 8)]
         public struct Pair
@@ -88,14 +89,17 @@ namespace Jitter2.Collision
             */
         }
 
+        [State]
         public Pair[] Slots = Array.Empty<Pair>();
 
+        [State]
         private int modder = 1;
 
         // 16384*8/1024 KB = 128 KB
         public const int MinimumSize = 16384;
         public const int TrimFactor = 8;
 
+        [State]
         public int Count { get; private set; }
 
         private static int PickSize(int size = -1)

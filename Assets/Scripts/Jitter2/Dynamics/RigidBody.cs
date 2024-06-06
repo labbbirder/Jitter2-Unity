@@ -29,6 +29,7 @@ using Jitter2.Collision.Shapes;
 using Jitter2.DataStructures;
 using Jitter2.Dynamics.Constraints;
 using Jitter2.LinearMath;
+using Jitter2.Sync;
 using Jitter2.UnmanagedMemory;
 
 namespace Jitter2.Dynamics
@@ -59,11 +60,13 @@ namespace Jitter2.Dynamics
     /// <summary>
     /// Represents the primary entity in the Jitter physics world.
     /// </summary>
-    public sealed class RigidBody : IListIndex, IDebugDrawable
+    public sealed partial class RigidBody : IListIndex, IDebugDrawable
     {
+        [State(handleIndex = HandleIndex.RIGID_BODY_DATA)]
         internal JHandle<RigidBodyData> handle;
 
-        public readonly long RigidBodyId;
+        [State]
+        public long RigidBodyId { get; private set; }
 
         /// <summary>
         /// Due to performance considerations, the data used to simulate this body (e.g., velocity or position)
@@ -78,10 +81,12 @@ namespace Jitter2.Dynamics
         /// </summary>
         public JHandle<RigidBodyData> Handle => handle;
 
+        [State]
         internal readonly List<Shape> shapes = new(1);
 
         // There is only one way to create a body: world.CreateRigidBody. There, we add an island
         // to the new body. This should never be null.
+        [State]
         internal Island island = null!;
 
         /// <summary>
@@ -89,9 +94,12 @@ namespace Jitter2.Dynamics
         /// </summary>
         public Island Island => island;
 
+        [State]
         internal readonly List<RigidBody> connections = new(0);
-        internal readonly HashSet<Arbiter> contacts = new(0);
-        internal readonly HashSet<Constraint> constraints = new(0);
+        [State]
+        internal readonly HashList<Arbiter> contacts = new();
+        // [State]
+        internal readonly HashList<Constraint> constraints = new();
 
         /// <summary>
         /// Event triggered when a new arbiter is created, indicating that two bodies have begun colliding.
@@ -123,41 +131,54 @@ namespace Jitter2.Dynamics
         /// <summary>
         /// Contains all contacts in which this body is involved.
         /// </summary>
-        public ReadOnlyHashSet<Arbiter> Contacts => new ReadOnlyHashSet<Arbiter>(contacts);
+        public ReadOnlyHashList<Arbiter> Contacts => new ReadOnlyHashList<Arbiter>(contacts);
 
         /// <summary>
         /// Contains all constraints connected to this body.
         /// </summary>
-        public ReadOnlyHashSet<Constraint> Constraints => new ReadOnlyHashSet<Constraint>(constraints);
+        public ReadOnlyHashList<Constraint> Constraints => new ReadOnlyHashList<Constraint>(constraints);
 
         /// <summary>
         /// Gets the list of shapes added to this rigid body.
         /// </summary>
         public ReadOnlyList<Shape> Shapes => new ReadOnlyList<Shape>(shapes);
 
+        [State]
         internal int islandMarker;
 
+        [State]
         internal float sleepTime = 0.0f;
 
+        [State]
         internal float inactiveThresholdLinearSq = 0.1f;
+        [State]
         internal float inactiveThresholdAngularSq = 0.1f;
+        [State]
         internal float deactivationTimeThreshold = 1.0f;
 
+        [State]
         internal float linearDampingMultiplier = 0.995f;
+        [State]
         internal float angularDampingMultiplier = 0.995f;
 
+        [State]
         internal JMatrix inverseInertia = JMatrix.Identity;
+        [State]
         internal float inverseMass = 1.0f;
 
+        [State]
         public float Friction { get; set; } = 0.2f;
+        [State]
         public float Restitution { get; set; } = 0.0f;
 
-        private readonly int hashCode;
+        [State]
+        private int hashCode;
 
         /// <summary>
         /// Gets or sets the world assigned to this body.
         /// </summary>
-        public World World { get; }
+        [State]
+        public World World { get; private set; }
 
         internal RigidBody(JHandle<RigidBodyData> handle, World world)
         {
@@ -292,6 +313,7 @@ namespace Jitter2.Dynamics
             set => handle.Data.AngularVelocity = value;
         }
 
+        [State]
         public bool AffectedByGravity { get; set; } = true;
 
         /// <summary>
@@ -299,6 +321,7 @@ namespace Jitter2.Dynamics
         /// </summary>
         public object Tag { get; set; }
 
+        [State]
         public bool EnableSpeculativeContacts { get; set; } = false;
 
         private void UpdateWorldInertia()

@@ -23,14 +23,16 @@
 
 using System;
 using Jitter2.LinearMath;
+using Jitter2.Sync;
 
 namespace Jitter2.Collision.Shapes
 {
     /// <summary>
     /// Represents a sphere.
     /// </summary>
-    public class SphereShape : Shape
+    public partial class SphereShape : Shape
     {
+        [State]
         private float radius;
 
         /// <summary>

@@ -24,22 +24,26 @@
 using System.Collections.Generic;
 using Jitter2.DataStructures;
 using Jitter2.Dynamics;
+using Jitter2.Sync;
 
 namespace Jitter2.Collision
 {
     /// <summary>
     /// Represents an island, which is a collection of bodies that are either directly or indirectly in contact with each other.
     /// </summary>
-    public sealed class Island : IListIndex
+    public sealed partial class Island : IListIndex
     {
-        internal readonly HashSet<RigidBody> bodies = new();
+        [State]
+        internal readonly HashList<RigidBody> bodies = new();
+        [State]
         internal bool MarkedAsActive;
+        [State]
         internal bool NeedsUpdate;
 
         /// <summary>
         /// Gets a collection of all the bodies present in this island.
         /// </summary>
-        public ReadOnlyHashSet<RigidBody> Bodies => new ReadOnlyHashSet<RigidBody>(bodies);
+        public ReadOnlyHashList<RigidBody> Bodies => new ReadOnlyHashList<RigidBody>(bodies);
 
         int IListIndex.ListIndex { get; set; } = -1;
 

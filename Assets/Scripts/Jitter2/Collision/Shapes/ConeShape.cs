@@ -23,15 +23,18 @@
 
 using System;
 using Jitter2.LinearMath;
+using Jitter2.Sync;
 
 namespace Jitter2.Collision.Shapes
 {
     /// <summary>
     /// Represents a cone shape.
     /// </summary>
-    public class ConeShape : Shape
+    public partial class ConeShape : Shape
     {
+        [State]
         private float radius;
+        [State]
         private float height;
 
         /// <summary>
