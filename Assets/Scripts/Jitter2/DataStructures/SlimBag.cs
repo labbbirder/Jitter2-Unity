@@ -33,7 +33,7 @@ namespace Jitter2.DataStructures
     /// decrementing by one.
     /// </summary>
     /// <typeparam name="T">The type of elements in the SlimBag.</typeparam>
-    internal class SlimBag<T>
+    internal partial class SlimBag<T>
     {
         private T[] array;
         private int counter;

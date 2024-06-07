@@ -22,13 +22,14 @@
  */
 
 using Jitter2.LinearMath;
+using Jitter2.Sync;
 
 namespace Jitter2.Collision.Shapes
 {
     /// <summary>
     /// Wraps any shape and allows to orientate and translate it.
     /// </summary>
-    public class TransformedShape : Shape
+    public partial class TransformedShape : Shape
     {
         private enum TransformationType
         {
@@ -37,8 +38,11 @@ namespace Jitter2.Collision.Shapes
             General
         }
     
+        [State]
         private JVector translation;
+        [State]
         private JMatrix transformation;
+        [State]
         private TransformationType type;
 
         /// <summary>
@@ -64,7 +68,8 @@ namespace Jitter2.Collision.Shapes
         
         }
 
-        public Shape OriginalShape { get; }
+        [State]
+        public Shape OriginalShape { get; private set; }
 
         public JVector Translation
         {

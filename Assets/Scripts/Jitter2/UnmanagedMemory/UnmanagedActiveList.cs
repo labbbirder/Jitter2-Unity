@@ -56,7 +56,7 @@ namespace Jitter2.UnmanagedMemory
     /// <summary>
     /// Manages memory for unmanaged structs, storing them sequentially in contiguous memory blocks. Each struct can either be active or inactive. Despite its name, this class does not fully mimic the behavior of a conventional list; the order of elements is not guaranteed to remain consistent. Indices of elements might change following calls to methods such as <see cref="UnmanagedActiveList{T}.Allocate(bool, bool)"/>, <see cref="UnmanagedActiveList{T}.Free(JHandle{T})"/>, <see cref="UnmanagedActiveList{T}.MoveToActive(JHandle{T})"/>, or <see cref="UnmanagedActiveList{T}.MoveToInactive(JHandle{T})"/>.
     /// </summary>
-    public sealed unsafe class UnmanagedActiveList<T> : IDisposable where T : unmanaged
+    public sealed unsafe partial class UnmanagedActiveList<T> : IDisposable where T : unmanaged
     {
         // this is a mixture of a datastructure and an allocator.
 
@@ -73,7 +73,7 @@ namespace Jitter2.UnmanagedMemory
 
         private readonly int maximumSize;
 
-        public int Count { get; private set; }
+        public int Count { get; private set; } // Todo: remember max count
 
         /// <summary>
         /// Initializes a new instance of the class.

@@ -67,7 +67,7 @@ namespace Jitter2.UnmanagedMemory
 
         public static void Free<T>(T* ptr) where T : unmanaged
         {
-            Free(ptr);
+            Free((IntPtr)ptr);
         }
 
         public static IntPtr AllocateHeap(int len) => Marshal.AllocHGlobal(len);

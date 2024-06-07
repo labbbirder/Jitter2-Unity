@@ -34,6 +34,7 @@ namespace Jitter2
 {
     public partial class World
     {
+        public string Name { get; set; }
         private struct ConvexHullIntersection
         {
             public JVector[] Left;

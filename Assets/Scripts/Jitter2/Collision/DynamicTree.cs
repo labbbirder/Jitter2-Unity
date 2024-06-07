@@ -27,6 +27,7 @@ using System.Diagnostics;
 using Jitter2.DataStructures;
 using Jitter2.LinearMath;
 using Jitter2.Parallelization;
+using Jitter2.Sync;
 
 namespace Jitter2.Collision
 {
@@ -35,15 +36,18 @@ namespace Jitter2.Collision
     /// maintains a record of potential overlapping pairs.
     /// </summary>
     /// <typeparam name="T">The type of elements stored in the dynamic tree.</typeparam>
-    public class DynamicTree<T> where T : class, IDynamicTreeProxy, IListIndex
+    public partial class DynamicTree<T> where T : class, IDynamicTreeProxy, IListIndex//, ISync
     {
+        [State]
         private volatile SlimBag<T>[] lists = Array.Empty<SlimBag<T>>();
 
+        [State]
         private readonly ActiveList<T> activeList;
 
         /// <summary>
         /// Gets the PairHashSet that contains pairs representing potential collisions. This should not be modified directly.
         /// </summary>
+        [State]
         public readonly PairHashSet PotentialPairs = new();
 
         public const int NullNode = -1;
@@ -64,7 +68,7 @@ namespace Jitter2.Collision
         /// <summary>
         /// Represents a node in the AABB tree.
         /// </summary>
-        public struct Node
+        public struct Node : ISync
         {
             public int Left, Right;
             public int Parent;
@@ -80,11 +84,27 @@ namespace Jitter2.Collision
                 readonly get => Left == NullNode;
                 set => Left = value ? NullNode : Left;
             }
+
+            public ISync CreateSimilar(SyncContext ctx) => new Node();
+
+            public void SyncFrom(ISync another, SyncContext ctx)
+            {
+                var other = (Node)another;
+                if (Proxy is ISync sp)
+                {
+                    Proxy = (T)ctx.SyncFrom(sp, (ISync)other.Proxy);
+                }
+                this = other;
+            }
         }
 
+        // [State]
         public Node[] Nodes = new Node[InitialSize];
+        [State]
         private readonly Stack<int> freeNodes = new();
+        [State]
         private int nodePointer = -1;
+        [State]
         private int root = NullNode;
 
         /// <summary>
@@ -166,6 +186,7 @@ namespace Jitter2.Collision
             }
 
             SetTime(Timings.ScanOverlapsPre);
+
 
             if (multiThread)
             {

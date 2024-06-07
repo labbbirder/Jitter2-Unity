@@ -23,15 +23,18 @@
 
 using System;
 using Jitter2.LinearMath;
+using Jitter2.Sync;
 
 namespace Jitter2.Collision.Shapes
 {
     /// <summary>
     /// Represents a shape in the form of a capsule.
     /// </summary>
-    public class CapsuleShape : Shape
+    public partial class CapsuleShape : Shape
     {
+        [State]
         private float radius;
+        [State]
         private float halfLength;
 
         /// <summary>

@@ -26,13 +26,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using Jitter2.LinearMath;
+using Jitter2.Sync;
 
 namespace Jitter2.Collision.Shapes
 {
     /// <summary>
     /// Represents a generic convex shape.
     /// </summary>
-    public class ConvexHullShape : Shape
+    public partial class ConvexHullShape : Shape
     {
         private struct CHullVector
         {
@@ -73,10 +74,14 @@ namespace Jitter2.Collision.Shapes
             }
         }
 
+        [State]
         private CHullVector[] vertices = null!;
+        [State]
         private CHullTriangle[] indices = null!;
+        [State]
         private List<ushort> neighborList = null!;
 
+        [State]
         private JVector shifted;
 
         /// <summary>
@@ -272,6 +277,7 @@ namespace Jitter2.Collision.Shapes
             JVector.Add(box.Max, position + temp2, out box.Max);
         }
 
+        [State]
         private JBBox initBox;
 
         public void CalcInitBox()

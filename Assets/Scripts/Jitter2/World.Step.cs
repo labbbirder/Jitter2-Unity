@@ -33,6 +33,7 @@ using Jitter2.Dynamics;
 using Jitter2.Dynamics.Constraints;
 using Jitter2.LinearMath;
 using Jitter2.Parallelization;
+using Jitter2.Sync;
 using Jitter2.UnmanagedMemory;
 using ThreadPool = Jitter2.Parallelization.ThreadPool;
 
@@ -58,7 +59,8 @@ namespace Jitter2
         private Action<Parallel.Batch> updateShapes;
         private Action<Parallel.Batch> detectCollisions;
 
-        private int stepper;
+        [State(Order = 1)]
+        private uint stepper;
 
         private void InitParallelCallbacks()
         {
@@ -113,7 +115,7 @@ namespace Jitter2
                 throw new ArgumentException("Time step cannot be negative.", nameof(dt));
             }
 
-            if(dt == 0.0f) return; // nothing to do
+            if (dt == 0.0f) return; // nothing to do
 
             long time = Stopwatch.GetTimestamp();
             double invFrequency = 1.0d / Stopwatch.Frequency;
@@ -203,6 +205,13 @@ namespace Jitter2
 
             PostStep?.Invoke(dt);
 
+            //Assert.IsTrue(brokenArbiters.Count == 0);
+            Assert.IsTrue(deferredArbiters.Count == 0);
+            foreach(var rb in RigidBodies)
+            {
+                Assert.IsTrue(rb.Torque == JVector.Zero);
+                Assert.IsTrue(rb.Force == JVector.Zero);
+            }
             // Signal the threadpool that threads can go into a wait state. If threadModel is set to
             // aggressive this will not happen. Also make sure that a switch from (aggressive, multiThreaded)
             // to (aggressive, sequential) triggers a signalReset here.
@@ -212,6 +221,9 @@ namespace Jitter2
             }
         }
 
+        /// <summary>
+        /// 根据DynamicTree，删除休眠的可能对（部分遍历）
+        /// </summary>
         private void TrimPotentialPairs()
         {
             PairHashSet phs = DynamicTree.PotentialPairs;
@@ -224,7 +236,7 @@ namespace Jitter2
 
             for (int i = 0; i < phs.Slots.Length / divisions; i++)
             {
-                int t = i * stepper % phs.Slots.Length;
+                int t = (int)((i * divisions + stepper) % phs.Slots.Length);
 
                 var n = phs.Slots[t];
                 if (n.ID == 0) continue;
@@ -255,6 +267,10 @@ namespace Jitter2
             }
         }
 
+
+        /// <summary>
+        /// 更新刚体休眠标记，应用阻尼，计算delta速度、质量、惯性矩
+        /// </summary>
         private void UpdateBodiesCallback(Parallel.Batch batch)
         {
             for (int i = batch.Start; i < batch.End; i++)
@@ -417,6 +433,11 @@ namespace Jitter2
             }
         }
 
+
+        
+        /// <summary>
+        /// 应用碰撞的力学效果
+        /// </summary>
         private void IterateContactsCallback(Parallel.Batch batch)
         {
             var span = memContacts.Active[batch.Start..batch.End];
@@ -435,6 +456,9 @@ namespace Jitter2
             }
         }
 
+        /// <summary>
+        /// 检查碰撞，并更新arbiters和deferredArbiters
+        /// </summary>
         private void DetectCollisionsCallback(Parallel.Batch batch)
         {
             PairHashSet phs = DynamicTree.PotentialPairs;
@@ -479,6 +503,9 @@ namespace Jitter2
             Assert.IsTrue(rigidBody.InverseInertiaWorld.Equals(JMatrix.Zero));
         }
 
+        /// <summary>
+        /// 更新所有shape的世界坐标包围盒，如果是预测体，则使用横扫包围盒
+        /// </summary>
         private void ForeachActiveShape(bool multiThread)
         {
             if (multiThread)
@@ -492,6 +519,10 @@ namespace Jitter2
             }
         }
 
+        
+        /// <summary>
+        /// 更新刚体休眠标记和速度、角速度、质量、惯性矩
+        /// </summary>
         private void ForeachActiveBody(bool multiThread)
         {
             if (multiThread)
@@ -505,6 +536,10 @@ namespace Jitter2
             }
         }
 
+        
+        /// <summary>
+        /// 应用并删除所有的断开碰撞，同时删除arbiters
+        /// </summary>
         private void RemoveBrokenArbiters()
         {
             for (int i = 0; i < brokenArbiters.Count; i++)
@@ -528,10 +563,13 @@ namespace Jitter2
                     arb.Handle = JHandle<ContactData>.Zero;
                 }
             }
-
+             
             brokenArbiters.Clear();
         }
 
+        /// <summary>
+        /// 判定contact的UsageMask，并据此追加新的断开碰撞
+        /// </summary>
         private void UpdateContactsCallback(Parallel.Batch batch)
         {
             var span = memContacts.Active[batch.Start..batch.End];
@@ -553,6 +591,9 @@ namespace Jitter2
             }
         }
 
+        /// <summary>
+        /// 应用并删除所有延迟碰撞
+        /// </summary>
         private void HandleDeferredArbiters()
         {
             for (int i = 0; i < deferredArbiters.Count; i++)
@@ -638,6 +679,10 @@ namespace Jitter2
             }
         }
 
+        
+        /// <summary>
+        /// 更新刚体的位置和朝向
+        /// </summary>
         private void IntegrateCallback(Parallel.Batch batch)
         {
             var span = memRigidBodies.Active[batch.Start..batch.End];
@@ -682,6 +727,10 @@ namespace Jitter2
             }
         }
 
+        
+        /// <summary>
+        /// 应用约束和碰撞的力学效果
+        /// </summary>
         private void Solve(bool multiThread, int iterations)
         {
             if (multiThread)
@@ -720,6 +769,9 @@ namespace Jitter2
             }
         }
 
+        /// <summary>
+        /// 判定contact的UsageMask，并据此追加新的断开碰撞
+        /// </summary>
         private void UpdateContacts(bool multiThread)
         {
             if (multiThread)
@@ -733,6 +785,10 @@ namespace Jitter2
             }
         }
 
+        /// <summary>
+        /// 更新速度和角速度
+        /// </summary>
+        /// <param name="multiThread"></param>
         private void IntegrateForces(bool multiThread)
         {
             if (multiThread)
@@ -745,6 +801,9 @@ namespace Jitter2
             }
         }
 
+        /// <summary>
+        /// 更新刚体的位置和朝向
+        /// </summary>
         private void Integrate(bool multiThread)
         {
             if (multiThread)
@@ -757,6 +816,9 @@ namespace Jitter2
             }
         }
 
+        /// <summary>
+        /// 检查碰撞，并更新arbiters和deferredArbiters
+        /// </summary>
         private void DetectCollisions(bool multiThread)
         {
             const int taskThreshold = 1024;
@@ -777,6 +839,10 @@ namespace Jitter2
 
         private readonly Stack<Island> inactivateIslands = new();
 
+        
+        /// <summary>
+        /// 更新刚体休眠状态, active / inactive
+        /// </summary>
         private void CheckDeactivation()
         {
             for (int i = 0; i < islands.Active; i++)
