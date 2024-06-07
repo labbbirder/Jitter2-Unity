@@ -7,6 +7,7 @@ using Jitter2.Collision.Shapes;
 using Jitter2.DataStructures;
 using Jitter2.LinearMath;
 using Jitter2.Sync;
+using Jitter2.Unity;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using Random = LSMath.Random;
@@ -48,21 +49,25 @@ public class Manager : MonoBehaviour
     World CreateInitialWorld(string name)
     {
         var world = new World() { Name = name };
-        foreach (var box in FindObjectsOfType<BoxCollider>())
+        foreach (var rb in FindObjectsOfType<JRigidBody>())
         {
-            var urb = box.GetComponent<Rigidbody>();
-            var rgb = world.CreateRigidBody();
-            rgb.Position = (box.transform.position - box.center).ToVector();
-            rgb.Orientation = box.transform.rotation.ToQuaternion();
-            rgb.IsStatic = !urb;
-            var size = box.size;
-            size.Scale(box.transform.localScale);
-            rgb.AddShape(new BoxShape(size.ToVector()));
-            // var link = box.gameObject.AddComponent<EntityLink>();
-            // link.rb = rgb;
-            if (urb) Destroy(urb);
-            Destroy(box);
+            rb.CreateBody(world);
         }
+        // foreach (var box in FindObjectsOfType<BoxCollider>())
+        // {
+        //     var urb = box.GetComponent<Rigidbody>();
+        //     var rgb = world.CreateRigidBody();
+        //     rgb.Position = (box.transform.position - box.center).ToVector();
+        //     rgb.Orientation = box.transform.rotation.ToQuaternion();
+        //     rgb.IsStatic = !urb;
+        //     var size = box.size;
+        //     size.Scale(box.transform.localScale);
+        //     rgb.AddShape(new BoxShape(size.ToVector()));
+        //     // var link = box.gameObject.AddComponent<EntityLink>();
+        //     // link.rb = rgb;
+        //     if (urb) Destroy(urb);
+        //     Destroy(box);
+        // }
         world.Step(0.02f, false);
         world.Step(0.02f, false);
         world.Step(0.02f, false);
