@@ -60,7 +60,7 @@ namespace Jitter2
         private Action<Parallel.Batch> detectCollisions;
 
         [State(Order = 1)]
-        private int stepper;
+        private uint stepper;
 
         private void InitParallelCallbacks()
         {
@@ -236,7 +236,7 @@ namespace Jitter2
 
             for (int i = 0; i < phs.Slots.Length / divisions; i++)
             {
-                int t = i * stepper % phs.Slots.Length; // TODO: it's weired?
+                int t = (int)((i * divisions + stepper) % phs.Slots.Length);
 
                 var n = phs.Slots[t];
                 if (n.ID == 0) continue;
