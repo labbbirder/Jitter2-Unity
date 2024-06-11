@@ -98,15 +98,15 @@ namespace Jitter2.Sync
         //     return self;
         // }
 
-        public T[] SyncFromExtraUnmanaged<T>(T[] self, T[] another) where T : unmanaged
-        {
-            if (another.Length > self.Length)
-            {
-                Array.Resize(ref self, another.Length);
-            }
-            Array.ConstrainedCopy(self, 0, another, 0, another.Length);
-            return self;
-        }
+        // public T[] SyncFromExtraUnmanaged<T>(T[] self, T[] another) where T : unmanaged
+        // {
+        //     if (another.Length > self.Length)
+        //     {
+        //         Array.Resize(ref self, another.Length);
+        //     }
+        //     Array.ConstrainedCopy(self, 0, another, 0, another.Length);
+        //     return self;
+        // }
 
         public Dictionary<K, V> SyncFromExtra<K, V>(Dictionary<K, V> self, Dictionary<K, V> another) where V : class, ISync
         {
@@ -608,7 +608,7 @@ namespace {t.Namespace}
                     Array.Resize(ref self, another.Length);
                 }
             }
-            Array.ConstrainedCopy(self, 0, another, 0, another.Length);
+            Array.ConstrainedCopy(another, 0, self, 0, another.Length);
             return self;
         }
 
@@ -630,6 +630,7 @@ namespace {t.Namespace}
                     // TODO: remove references
                     AddToPool(DFree, dst);
                 }
+                dst = null;
                 return;
             }
 
