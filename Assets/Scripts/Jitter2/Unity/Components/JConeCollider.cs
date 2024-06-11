@@ -1,10 +1,9 @@
 using Jitter2.Collision.Shapes;
-using Jitter2.LinearMath;
-using UnityEditor;
 using UnityEngine;
 
 namespace Jitter2.Unity
 {
+    [AddComponentMenu("LSPhysics/ConeCollider")]
     [RequireComponent(typeof(JRigidBody))]
     public class JConeCollider : JColliderBase
     {

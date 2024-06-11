@@ -1,8 +1,6 @@
 using System.Diagnostics;
 using Jitter2.Collision.Shapes;
 using Jitter2.LinearMath;
-using UnityEditor;
-using UnityEditor.SceneManagement;
 using UnityEngine;
 
 namespace Jitter2.Unity
