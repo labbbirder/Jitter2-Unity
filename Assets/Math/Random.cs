@@ -20,7 +20,7 @@ namespace LSMath
         public float Norm01()
         {
             const float DIV = 0x10_0000;
-            return (impl.UInt64() % DIV) / DIV;
+            return (Int31() % DIV) / DIV;
         }
         /// <summary>
         /// Returns a random number reside in [from, to]
