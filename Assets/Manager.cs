@@ -116,7 +116,13 @@ public class Manager : MonoBehaviour
             world1.Step(0.02f, false);
             // VisitAndCompare(world1, world2);
         }
-        if (Input.GetKey(KeyCode.D))
+        if (Input.GetKey(KeyCode.KeypadMinus))
+        {
+            var idx = rand.Range(0, world1.RigidBodies.Count);
+            print($"{idx} {world1.RigidBodies.Count}");
+            world1.Remove(world1.RigidBodies[idx]);
+        }
+        if (Input.GetKey(KeyCode.KeypadPlus))
         {
             var go = new GameObject();
             var rb = go.AddComponent<JRigidBody>();
