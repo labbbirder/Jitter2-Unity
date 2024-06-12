@@ -7,6 +7,14 @@ public class JitterGizmosDrawer : IDebugDrawer
     static JitterGizmosDrawer m_Instance;
     public static JitterGizmosDrawer Instance => m_Instance ??= new();
     public Color color { get; set; } = Color.green;
+
+    public void DrawCube(in JVector p, in JQuaternion ori, in JVector size)
+    {
+        Gizmos.matrix = Matrix4x4.TRS(p.ToVector(), ori.ToQuaternion(), Vector3.one);
+        Gizmos.color = color;
+        Gizmos.DrawWireCube(Vector3.zero, size.ToVector());
+    }
+
     public void DrawPoint(in JVector p)
     {
         Gizmos.color = color;
@@ -17,6 +25,13 @@ public class JitterGizmosDrawer : IDebugDrawer
     {
         Gizmos.color = color;
         Gizmos.DrawLine(pA.ToVector(), pB.ToVector());
+    }
+
+    public void DrawSphere(in JVector p, in JQuaternion ori, float radius)
+    {
+        Gizmos.matrix = Matrix4x4.TRS(p.ToVector(), ori.ToQuaternion(), Vector3.one);
+        Gizmos.color = color;
+        Gizmos.DrawWireSphere(Vector3.zero, radius);
     }
 
     public void DrawTriangle(in JVector pA, in JVector pB, in JVector pC)

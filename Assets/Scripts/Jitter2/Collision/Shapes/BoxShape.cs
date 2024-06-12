@@ -22,6 +22,7 @@
  */
 
 using System;
+using Jitter2.Dynamics;
 using Jitter2.LinearMath;
 using Jitter2.Sync;
 
@@ -82,9 +83,6 @@ namespace Jitter2.Collision.Shapes
 
         public override void SupportMap(in JVector direction, out JVector result)
         {
-            if(direction.LengthSquared() is float.NaN){
-                _ =1;
-            }
             result.X = Math.Sign(direction.X) * halfSize.X;
             result.Y = Math.Sign(direction.Y) * halfSize.Y;
             result.Z = Math.Sign(direction.Z) * halfSize.Z;
@@ -110,6 +108,11 @@ namespace Jitter2.Collision.Shapes
             inertia.M33 = 1.0f / 12.0f * mass * (size.X * size.X + size.Y * size.Y);
 
             com = JVector.Zero;
+        }
+
+        protected internal override void DebugDraw(IDebugDrawer drawer, in RigidBodyData Data)
+        {
+            drawer.DrawCube(Data.Position, Data.Orientation, halfSize * 2);
         }
     }
 }

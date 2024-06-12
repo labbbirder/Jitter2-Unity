@@ -640,8 +640,6 @@ namespace Jitter2.Dynamics
             UpdateWorldInertia();
         }
 
-        private static Stack<JTriangle> debugTriangles;
-
         /// <summary>
         /// Generates a rough triangle approximation of the shapes of the body.
         /// Since the generation is slow this should only be used for debugging
@@ -649,21 +647,9 @@ namespace Jitter2.Dynamics
         /// </summary>
         public void DebugDraw(IDebugDrawer drawer)
         {
-            debugTriangles ??= new Stack<JTriangle>();
-
             foreach (var shape in this.shapes)
             {
-                ShapeHelper.MakeHull(shape, debugTriangles, 3);
-
-                while (debugTriangles.Count > 0)
-                {
-                    var tri = debugTriangles.Pop();
-
-                    drawer.DrawTriangle(
-                        JVector.Transform(tri.V0, Data.Orientation) + Data.Position,
-                        JVector.Transform(tri.V1, Data.Orientation) + Data.Position,
-                        JVector.Transform(tri.V2, Data.Orientation) + Data.Position);
-                }
+                shape.DebugDraw(drawer, Data);
             }
         }
 

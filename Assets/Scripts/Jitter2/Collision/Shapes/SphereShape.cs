@@ -22,6 +22,7 @@
  */
 
 using System;
+using Jitter2.Dynamics;
 using Jitter2.LinearMath;
 using Jitter2.Sync;
 
@@ -90,6 +91,11 @@ namespace Jitter2.Collision.Shapes
             inertia.M33 = 2.0f / 5.0f * mass * radius * radius;
 
             com = JVector.Zero;
+        }
+
+        protected internal override void DebugDraw(IDebugDrawer drawer, in RigidBodyData Data)
+        {
+            drawer.DrawSphere(Data.Position, Data.Orientation, radius);
         }
     }
 }

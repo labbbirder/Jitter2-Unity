@@ -35,5 +35,7 @@ namespace Jitter2
         public void DrawSegment(in JVector pA, in JVector pB);
         public void DrawTriangle(in JVector pA, in JVector pB, in JVector pC);
         public void DrawPoint(in JVector p);
+        public void DrawSphere(in JVector p, in JQuaternion ori, float radius);
+        public void DrawCube(in JVector p, in JQuaternion ori, in JVector size);
     }
 }

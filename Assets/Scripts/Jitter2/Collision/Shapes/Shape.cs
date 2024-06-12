@@ -22,6 +22,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using Jitter2.DataStructures;
 using Jitter2.Dynamics;
 using Jitter2.LinearMath;
@@ -203,7 +204,7 @@ namespace Jitter2.Collision.Shapes
             {
                 box.Max.Z += max;
             }
-
+Assert.IsTrue(box.Contains(WorldBoundingBox)== JBBox.ContainmentType.Contains);
             WorldBoundingBox = box;
         }
 
@@ -242,5 +243,24 @@ namespace Jitter2.Collision.Shapes
 
         /// <inheritdoc/>
         public abstract void SupportMap(in JVector direction, out JVector result);
+        private static Stack<JTriangle> debugTriangles;
+
+        internal protected virtual void DebugDraw(IDebugDrawer drawer, in RigidBodyData Data)
+        {
+            debugTriangles ??= new Stack<JTriangle>();
+
+            var shape = this;
+            ShapeHelper.MakeHull(shape, debugTriangles, 3);
+
+            while (debugTriangles.Count > 0)
+            {
+                var tri = debugTriangles.Pop();
+
+                drawer.DrawTriangle(
+                    JVector.Transform(tri.V0, Data.Orientation) + Data.Position,
+                    JVector.Transform(tri.V1, Data.Orientation) + Data.Position,
+                    JVector.Transform(tri.V2, Data.Orientation) + Data.Position);
+            }
+        }
     }
 }
