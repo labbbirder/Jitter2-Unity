@@ -276,7 +276,7 @@ namespace Jitter2.Collision
                     }
                 }
 
-                Trace.WriteLine($"EPA: Could not converge within {MaxIter} iterations.");
+                UnityEngine.Debug.LogWarning($"EPA: Could not converge within {MaxIter} iterations.");
 
                 return false;
 
@@ -449,7 +449,7 @@ namespace Jitter2.Collision
                     {
                         // was: return true;
                         // better not return a collision
-                        Trace.WriteLine("MPR: This should not happen.");
+                        UnityEngine.Debug.LogWarning("MPR: This should not happen.");
                         return false;
                     }
 
@@ -588,7 +588,7 @@ namespace Jitter2.Collision
                 point1 = point2 = normal = JVector.Zero;
                 penetration = 0.0f;
 
-                Trace.WriteLine($"EPA: Could not converge within {MaxIter} iterations.");
+                UnityEngine.Debug.LogWarning($"EPA: Could not converge within {MaxIter} iterations.");
 
                 return false;
 

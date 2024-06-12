@@ -126,7 +126,7 @@ namespace Jitter2.Collision
         private void Resize(int size)
         {
             if (Slots.Length == size) return;
-            Trace.WriteLine($"RESIZING PAIRHASHSET, {Slots.Length} -> {size}");
+            UnityEngine.Debug.LogWarning($"RESIZING PAIRHASHSET, {Slots.Length} -> {size}");
 
             var tmp = Slots;
             Count = 0;

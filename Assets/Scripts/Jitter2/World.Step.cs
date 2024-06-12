@@ -44,6 +44,7 @@ namespace Jitter2
         // Note: A SlimBag of the reference type 'Arbiter' does not introduce GC problems (not setting
         // all elements to null when clearing) since the references for Arbiters are pooled anyway.
         private readonly SlimBag<Arbiter> deferredArbiters = new();
+        [ManualState]
         private readonly SlimBag<JHandle<ContactData>> brokenArbiters = new();
 
         private Action<Parallel.Batch> integrate;
@@ -207,7 +208,7 @@ namespace Jitter2
 
             //Assert.IsTrue(brokenArbiters.Count == 0);
             Assert.IsTrue(deferredArbiters.Count == 0);
-            foreach(var rb in RigidBodies)
+            foreach (var rb in RigidBodies)
             {
                 Assert.IsTrue(rb.Torque == JVector.Zero);
                 Assert.IsTrue(rb.Force == JVector.Zero);
@@ -434,7 +435,7 @@ namespace Jitter2
         }
 
 
-        
+
         /// <summary>
         /// 应用碰撞的力学效果
         /// </summary>
@@ -519,9 +520,9 @@ namespace Jitter2
             }
         }
 
-        
+
         /// <summary>
-        /// 更新刚体休眠标记和速度、角速度、质量、惯性矩
+        /// 更新刚体休眠标记，应用阻尼，计算delta速度、质量、惯性矩
         /// </summary>
         private void ForeachActiveBody(bool multiThread)
         {
@@ -536,7 +537,7 @@ namespace Jitter2
             }
         }
 
-        
+
         /// <summary>
         /// 应用并删除所有的断开碰撞，同时删除arbiters
         /// </summary>
@@ -563,7 +564,7 @@ namespace Jitter2
                     arb.Handle = JHandle<ContactData>.Zero;
                 }
             }
-             
+
             brokenArbiters.Clear();
         }
 
@@ -679,7 +680,7 @@ namespace Jitter2
             }
         }
 
-        
+
         /// <summary>
         /// 更新刚体的位置和朝向
         /// </summary>
@@ -742,7 +743,7 @@ namespace Jitter2
             }
         }
 
-        
+
         /// <summary>
         /// 应用约束和碰撞的力学效果
         /// </summary>
@@ -801,7 +802,7 @@ namespace Jitter2
         }
 
         /// <summary>
-        /// 更新速度和角速度
+        /// 更新速度和角速度(+delta)
         /// </summary>
         /// <param name="multiThread"></param>
         private void IntegrateForces(bool multiThread)
@@ -854,7 +855,7 @@ namespace Jitter2
 
         private readonly Stack<Island> inactivateIslands = new();
 
-        
+
         /// <summary>
         /// 更新刚体休眠状态, active / inactive
         /// </summary>

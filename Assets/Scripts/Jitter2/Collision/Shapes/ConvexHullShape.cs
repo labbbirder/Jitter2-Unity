@@ -74,9 +74,9 @@ namespace Jitter2.Collision.Shapes
             }
         }
 
-        [State]
+        [State(AllowExtraSize = false)]
         private CHullVector[] vertices = null!;
-        [State]
+        [State(AllowExtraSize = false)]
         private CHullTriangle[] indices = null!;
         [State]
         private List<ushort> neighborList = null!;
@@ -160,7 +160,7 @@ namespace Jitter2.Collision.Shapes
                 tmpNeighbors[i].Clear();
                 tmpVerticesSpan[i] = element;
             }
-            
+
             vertices = tmpVertices.ToArray();
 
             tmpIndices.Clear();
@@ -312,7 +312,7 @@ namespace Jitter2.Collision.Shapes
             ushort current = 0;
             float dotProduct = JVector.Dot(vertices[current].Vertex, direction);
 
-            again:
+        again:
             var min = vertices[current].NeighborMinIndex;
             var max = vertices[current].NeighborMaxIndex;
 

@@ -41,7 +41,7 @@ namespace Jitter2.Collision
         [State]
         private volatile SlimBag<T>[] lists = Array.Empty<SlimBag<T>>();
 
-        [State]
+        // [State]
         private readonly ActiveList<T> activeList;
 
         /// <summary>
@@ -68,7 +68,7 @@ namespace Jitter2.Collision
         /// <summary>
         /// Represents a node in the AABB tree.
         /// </summary>
-        public struct Node : ISync
+        public struct Node
         {
             public int Left, Right;
             public int Parent;
@@ -85,20 +85,9 @@ namespace Jitter2.Collision
                 set => Left = value ? NullNode : Left;
             }
 
-            public ISync CreateSimilar(SyncContext ctx) => new Node();
-
-            public void SyncFrom(ISync another, SyncContext ctx)
-            {
-                var other = (Node)another;
-                if (Proxy is ISync sp)
-                {
-                    Proxy = (T)ctx.SyncFrom(sp, (ISync)other.Proxy);
-                }
-                this = other;
-            }
         }
 
-        // [State]
+        [ManualState]
         public Node[] Nodes = new Node[InitialSize];
         [State]
         private readonly Stack<int> freeNodes = new();
@@ -387,7 +376,7 @@ namespace Jitter2.Collision
             if (nodePointer == Nodes.Length)
             {
                 Array.Resize(ref Nodes, Nodes.Length * 2);
-                Trace.WriteLine($"Resized array of AABBTree to {Nodes.Length} elements.");
+                UnityEngine.Debug.LogWarning($"Resized array of AABBTree to {Nodes.Length} elements.");
             }
 
             return nodePointer;

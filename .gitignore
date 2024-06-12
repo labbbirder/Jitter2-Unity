@@ -100,3 +100,6 @@ Packages/packages-lock.json
 /TextToolDatas/
 
 /Assets/Plugins/Sirenix*
+/Assets/Omni*
+/Assets/Plugins/IngameDebugConsole*
+/Assets/TextMesh Pro*

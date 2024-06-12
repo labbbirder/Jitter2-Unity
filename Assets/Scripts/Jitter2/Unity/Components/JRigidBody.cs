@@ -25,8 +25,10 @@ namespace Jitter2.Unity
             UpdateTransform(body);
             return body;
         }
+
         public void Refresh()
         {
+#if UNITY_EDITOR
             if (Application.isPlaying) return;
             if (body == null)
             {
@@ -35,6 +37,7 @@ namespace Jitter2.Unity
             UpdateProperties(body);
             UpdateShapes(body);
             UpdateTransform(body);
+#endif
         }
 
         internal void UpdateProperties(RigidBody rb)

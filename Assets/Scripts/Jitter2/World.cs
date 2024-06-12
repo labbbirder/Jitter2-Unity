@@ -96,14 +96,14 @@ namespace Jitter2
         /// </summary>
         public SpanData RawData => new(this);
 
-        [State]
+        [ManualState]
         private readonly Dictionary<ArbiterKey, Arbiter> arbiters = new();
 
-        [State]
+        [ManualState]
         private readonly ActiveList<Island> islands = new();
-        [State]
+        [ManualState]
         private readonly ActiveList<RigidBody> bodies = new();
-        [State]
+        [ManualState]
         private readonly ActiveList<Shape> shapes = new();
 
         [State]

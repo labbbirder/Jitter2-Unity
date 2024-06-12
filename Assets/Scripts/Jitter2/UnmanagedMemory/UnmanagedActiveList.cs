@@ -207,7 +207,7 @@ namespace Jitter2.UnmanagedMemory
 
                 size = Math.Min(2 * osize, maximumSize);
 
-                Trace.WriteLine($"{nameof(UnmanagedActiveList<T>)}: " +
+                UnityEngine.Debug.LogWarning($"{nameof(UnmanagedActiveList<T>)}: " +
                                 $"Resizing to {size}x{typeof(T)} ({size}x{sizeof(T)} Bytes).");
 
                 var oldmemory = memory;

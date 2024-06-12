@@ -116,7 +116,7 @@ namespace Jitter2.DataStructures
 
         private T[] elements;
 
-        public int Active { get; private set; }
+        public int Active { get; internal set; }
 
         public ActiveList(int initialSize = 1024)
         {
@@ -141,7 +141,7 @@ namespace Jitter2.DataStructures
             Active = 0;
         }
 
-        public int Count { get; private set; }
+        public int Count { get; internal set; }
 
         public void Add(T element, bool active = false)
         {
@@ -158,7 +158,7 @@ namespace Jitter2.DataStructures
             if (active) MoveToActive(element);
         }
 
-        private void Swap(int index0, int index1)
+        internal void Swap(int index0, int index1)
         {
             (elements[index0], elements[index1]) =
                 (elements[index1], elements[index0]);
