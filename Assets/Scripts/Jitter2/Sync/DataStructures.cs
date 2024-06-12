@@ -53,7 +53,7 @@ namespace Jitter2.UnmanagedMemory
         {
             var other = another as UnmanagedActiveList<T>;
             memory = ctx.SyncMemory(memory, size * sizeof(T), other.memory, other.size * sizeof(T));
-            handles = (T**)ctx.SyncMemory((nint*)handles, size, (nint*)other.handles, other.size);
+            handles = (T**)ctx.SyncMemory((nint*)handles, size * sizeof(nint), (nint*)other.handles, other.size * sizeof(nint));
 
 
             active = other.active;
