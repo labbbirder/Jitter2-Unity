@@ -2,11 +2,11 @@ using Jitter2.Collision.Shapes;
 using Jitter2.LinearMath;
 using UnityEngine;
 
-namespace Jitter2.Unity
+namespace Jitter2.Unity2D
 {
-    [AddComponentMenu("JPhysics/MeshCollider")]
-    [RequireComponent(typeof(JRigidBody))]
-    public class JMeshCollider : JColliderBase
+    [AddComponentMenu("JPhysics2D/MeshCollider")]
+    [RequireComponent(typeof(JRigidBody2D))]
+    public class JMeshCollider : JCollider2DBase
     {
         public Mesh mesh;
 

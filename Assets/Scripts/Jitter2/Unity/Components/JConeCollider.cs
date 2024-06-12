@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Jitter2.Unity
 {
-    [AddComponentMenu("LSPhysics/ConeCollider")]
+    [AddComponentMenu("JPhysics/ConeCollider")]
     [RequireComponent(typeof(JRigidBody))]
     public class JConeCollider : JColliderBase
     {

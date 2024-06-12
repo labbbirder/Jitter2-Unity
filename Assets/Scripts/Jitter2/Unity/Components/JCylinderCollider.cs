@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Jitter2.Unity
 {
-    [AddComponentMenu("LSPhysics/CylinderCollider")]
+    [AddComponentMenu("JPhysics/CylinderCollider")]
     [RequireComponent(typeof(JRigidBody))]
     public class JCylinderCollider : JColliderBase
     {

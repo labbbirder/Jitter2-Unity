@@ -1,4 +1,6 @@
 #if UNITY_EDITOR
+using Jitter2.DataStructures;
+using Jitter2.Unity2D;
 using UnityEditor;
 using UnityEngine;
 
@@ -20,10 +22,16 @@ namespace Jitter2.Unity
                 {
                     body.Refresh();
                 }
+                
+                var bodies2D = FindObjectsByType<JRigidBody>(FindObjectsSortMode.None);
+                foreach (var body in bodies2D)
+                {
+                    body.Refresh();
+                }
             };
             EditorApplication.playModeStateChanged += s =>
             {
-                if (s == PlayModeStateChange.ExitingEditMode)
+                if (s == PlayModeStateChange.EnteredPlayMode)
                 {
                     _world?.Clear();
                 }
@@ -32,6 +40,18 @@ namespace Jitter2.Unity
 
         [DrawGizmo(GizmoType.Selected | GizmoType.Active | GizmoType.NonSelected)]
         static void DrawRigidBodyGizmos(JRigidBody rb, GizmoType gizmoType)
+        {
+            var item = rb.body as IListIndex;
+            if (item.ListIndex == -1) return;
+            if (!Application.isPlaying)
+            {
+                rb.UpdateTransform(rb.body);
+                rb.body.DebugDraw(JitterGizmosDrawer.Instance);
+            }
+        }
+
+        [DrawGizmo(GizmoType.Selected | GizmoType.Active | GizmoType.NonSelected)]
+        static void DrawRigidBody2DGizmos(JRigidBody2D rb, GizmoType gizmoType)
         {
             if (!Application.isPlaying)
             {

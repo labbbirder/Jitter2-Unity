@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Jitter2.Unity
 {
-    [AddComponentMenu("LSPhysics/BoxCollider")]
+    [AddComponentMenu("JPhysics/BoxCollider")]
     [RequireComponent(typeof(JRigidBody))]
     public class JBoxCollider : JColliderBase
     {

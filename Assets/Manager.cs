@@ -8,6 +8,7 @@ using Jitter2.DataStructures;
 using Jitter2.LinearMath;
 using Jitter2.Sync;
 using Jitter2.Unity;
+using Jitter2.Unity2D;
 using TMPro;
 using UnityEngine;
 using Random = LSMath.Random;
@@ -23,7 +24,7 @@ public class Manager : MonoBehaviour
     void OnDrawGizmos()
     {
         if (world1?.RigidBodies is null) return;
-        
+
         JitterGizmosDrawer.Instance.color = Color.green;
         foreach (var rb in world1.RigidBodies)
         {
@@ -41,8 +42,8 @@ public class Manager : MonoBehaviour
     void Start()
     {
         Application.targetFrameRate = -1;
-        world1 = CreateInitialWorld("world1");
         world2 = CreateInitialWorld("world2");
+        world1 = CreateInitialWorld("world1");
         var seed = (ulong)DateTime.Now.Ticks;
         rand.Seed = seed;
         // world1.SyncFrom(world2, new());
@@ -57,6 +58,11 @@ public class Manager : MonoBehaviour
         };
 
         foreach (var rb in FindObjectsOfType<JRigidBody>())
+        {
+            rb.CreateBody(world);
+        }
+
+        foreach (var rb in FindObjectsOfType<JRigidBody2D>())
         {
             rb.CreateBody(world);
         }
