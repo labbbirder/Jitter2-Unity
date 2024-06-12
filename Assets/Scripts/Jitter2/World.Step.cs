@@ -696,6 +696,21 @@ namespace Jitter2
                 JVector lvel = rigidBody.Velocity;
                 JVector avel = rigidBody.AngularVelocity;
 
+                if (rigidBody.hasTransformConstraints)
+                {
+                    var transLimit = rigidBody.TranslationConstraint;
+                    lvel.X *= transLimit.X;
+                    lvel.Y *= transLimit.Y;
+                    lvel.Z *= transLimit.Z;
+                    rigidBody.Velocity = lvel;
+
+                    var rotLimit = rigidBody.RotationConstraint;
+                    avel.X *= rotLimit.X;
+                    avel.Y *= rotLimit.Y;
+                    avel.Z *= rotLimit.Z;
+                    rigidBody.AngularVelocity = avel;
+                }
+
                 rigidBody.Position += lvel * substep_dt;
 
                 float angle = avel.Length();

@@ -54,6 +54,10 @@ namespace Jitter2.Dynamics
         public bool IsActive;
         public bool IsStatic;
 
+        public JVector TranslationConstraint;
+        public JVector RotationConstraint;
+        public bool hasTransformConstraints;
+
         public readonly bool IsStaticOrInactive => !IsActive || IsStatic;
     }
 

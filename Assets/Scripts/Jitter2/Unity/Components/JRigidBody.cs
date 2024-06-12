@@ -14,7 +14,9 @@ namespace Jitter2.Unity
         public float friction = 0.2f;
         public float restitution = 0;
         internal RigidBody body;
-        
+        public Vector3Int translationConstraints = Vector3Int.one;
+        public Vector3Int rotationConstraints = Vector3Int.one;
+
         public RigidBody CreateBody(World world)
         {
             body = world.CreateRigidBody();
@@ -41,6 +43,9 @@ namespace Jitter2.Unity
             rb.EnableSpeculativeContacts = isBullet;
             rb.Friction = friction;
             rb.Restitution = restitution;
+            rb.Data.hasTransformConstraints = rotationConstraints != Vector3Int.one || translationConstraints != Vector3Int.one;
+            rb.Data.RotationConstraint = new JVector(rotationConstraints.x, rotationConstraints.y, rotationConstraints.z);
+            rb.Data.TranslationConstraint = new JVector(translationConstraints.x, translationConstraints.y, translationConstraints.z);
             rb.SetMassInertia(mass);
         }
 
