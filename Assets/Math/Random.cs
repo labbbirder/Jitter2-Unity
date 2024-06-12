@@ -23,12 +23,21 @@ namespace LSMath
             return (Int31() % DIV) / DIV;
         }
         /// <summary>
-        /// Returns a random number reside in [from, to]
+        /// Returns a random number reside in [<paramref name="from"/>, <paramref name="to"/>)
         /// </summary>
         /// <returns></returns>
         public int Range(int from, int to)
         {
-            return (Int31() % (to - from + 1)) + from;
+            return (Int31() % (to - from)) + from;
+        }
+
+        /// <summary>
+        /// Returns a random number reside in [0, <paramref name="to"/>)
+        /// </summary>
+        /// <returns></returns>
+        public int Range(int to)
+        {
+            return Range(0, to);
         }
 
         /// <summary>
