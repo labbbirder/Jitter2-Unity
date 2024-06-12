@@ -19,5 +19,6 @@ namespace Jitter2.Collision.Shapes
             this.radius = other.radius;
             this.halfLength = other.halfLength;
         }
+        
     }
 }

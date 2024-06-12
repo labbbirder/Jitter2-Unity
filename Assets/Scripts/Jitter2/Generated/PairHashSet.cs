@@ -18,8 +18,9 @@ namespace Jitter2.Collision
                         
             this.Count = other.Count;
             if (ctx.GetOrCreate(Slots, other.Slots,out var _Slots))
-                this.Slots = ctx.SyncUnmanagedArray(_Slots, other.Slots);
+                this.Slots = ctx.SyncUnmanagedArray(_Slots, other.Slots, true);
             this.modder = other.modder;
         }
+        
     }
 }

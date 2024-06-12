@@ -35,15 +35,15 @@ namespace Jitter2.Dynamics
     {
         internal static Stack<Arbiter> Pool = new();
 
-        [State]
+        [State(IsLateReference = true)]
         public RigidBody Body1 = null!;
-        [State]
+        [State(IsLateReference = true)]
         public RigidBody Body2 = null!;
 
         [State(handleIndex = HandleIndex.CONTACT_DATA)]
         public JHandle<ContactData> Handle;
 
-        public override int GetHashCode()
+        public override int GetHashCode()//TODO: new first ? init first?
         {
             return Body1.GetHashCode() ^ Body2.GetHashCode();
         }

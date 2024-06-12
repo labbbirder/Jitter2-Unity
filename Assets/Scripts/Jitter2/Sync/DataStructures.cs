@@ -18,22 +18,23 @@ namespace Jitter2.DataStructures
             => new SlimBag<T>(InternalSize);
     }
 
-    partial class ActiveList<T> : ISync //where T : class, ISync
+    partial class ActiveList<T> //: ISync //where T : class, ISync
     {
-        public ISync CreateSimilar(SyncContext ctx)
-            => new ActiveList<T>(elements.Length);
+        internal ref T[] Elements => ref elements;
+        // public ISync CreateSimilar(SyncContext ctx)
+        //     => new ActiveList<T>(elements.Length);
 
-        public void SyncFrom(ISync other, SyncContext ctx)
-        {
-            var another = other as ActiveList<T>;
-            Active = another.Active;
-            Count = another.Count;
-            elements = ctx.SyncArray(elements, another.elements);
-            for (int i = 0; i < Count; i++)
-            {
-                this[i].ListIndex = i;
-            }
-        }
+        // public void SyncFrom(ISync other, SyncContext ctx)
+        // {
+        //     var another = other as ActiveList<T>;
+        //     Active = another.Active;
+        //     Count = another.Count;
+        //     elements = ctx.SyncArray(elements, another.elements);
+        //     for (int i = 0; i < Count; i++)
+        //     {
+        //         this[i].ListIndex = i;
+        //     }
+        // }
     }
 }
 
@@ -63,6 +64,27 @@ namespace Jitter2.UnmanagedMemory
             for (int i = 0; i < size; i++)
             {
                 handles[i] = (T*)((nint)handles[i] - (nint)other.memory + (nint)memory);
+            }
+        }
+    }
+}
+
+namespace Jitter2.Collision
+{
+    partial class DynamicTree<T> : ISyncStageReceiver
+    {
+        void ISyncStageReceiver.OnEnterStage(int stage, ISync another, SyncContext ctx)
+        {
+            if (stage == 0)
+            {
+                var other = another as DynamicTree<T>;
+                ctx.EnsureArraySize(ref Nodes, other.Nodes.Length);
+                for (int i = 0; i < other.Nodes.Length; i++)
+                {
+                    var node = other.Nodes[i];
+                    ctx.GetCache(null, node.Proxy, out node.Proxy);
+                    Nodes[i] = node;
+                }
             }
         }
     }

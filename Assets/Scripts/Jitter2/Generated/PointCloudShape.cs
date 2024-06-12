@@ -20,5 +20,6 @@ namespace Jitter2.Collision.Shapes
                 this.vertices = ctx.SyncFromExtraUnmanaged(_vertices, other.vertices);
             this.shifted = other.shifted;
         }
+        
     }
 }

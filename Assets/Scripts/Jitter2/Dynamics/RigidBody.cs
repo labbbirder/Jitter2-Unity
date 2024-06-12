@@ -64,7 +64,7 @@ namespace Jitter2.Dynamics
     /// <summary>
     /// Represents the primary entity in the Jitter physics world.
     /// </summary>
-    public sealed partial class RigidBody : IListIndex, IDebugDrawable
+    public sealed partial class RigidBody : IListIndex, IDebugDrawable, IIdentityObject
     {
         [State(handleIndex = HandleIndex.RIGID_BODY_DATA)]
         internal JHandle<RigidBodyData> handle;
@@ -85,12 +85,12 @@ namespace Jitter2.Dynamics
         /// </summary>
         public JHandle<RigidBodyData> Handle => handle;
 
-        [State]
+        [State(IsLateReference = true)]
         internal readonly List<Shape> shapes = new(1);
 
         // There is only one way to create a body: world.CreateRigidBody. There, we add an island
         // to the new body. This should never be null.
-        [State]
+        [State(IsLateReference = true)]
         internal Island island = null!;
 
         /// <summary>
@@ -98,11 +98,11 @@ namespace Jitter2.Dynamics
         /// </summary>
         public Island Island => island;
 
-        [State]
+        [State(IsLateReference = true)]
         internal readonly List<RigidBody> connections = new(0);
-        [State]
+        [State(IsLateReference = true)]
         internal readonly HashList<Arbiter> contacts = new();
-        // [State]
+        // [State(IsLateReference = true)]
         internal readonly HashList<Constraint> constraints = new();
 
         /// <summary>
@@ -675,5 +675,7 @@ namespace Jitter2.Dynamics
         public float Mass => 1.0f / inverseMass;
 
         int IListIndex.ListIndex { get; set; } = -1;
+
+        public long Id => RigidBodyId;
     }
 }

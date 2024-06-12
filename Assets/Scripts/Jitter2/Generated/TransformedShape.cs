@@ -21,5 +21,6 @@ namespace Jitter2.Collision.Shapes
             this.transformation = other.transformation;
             this.type = other.type;
         }
+        
     }
 }

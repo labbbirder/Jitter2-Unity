@@ -35,7 +35,7 @@ namespace Jitter2.Collision.Shapes
     /// The shape itself does not have a position or orientation. Shapes can be associated with 
     /// instances of <see cref="RigidBody"/>.
     /// </summary>
-    public abstract partial class Shape : ISupportMap, IListIndex, IDynamicTreeProxy
+    public abstract partial class Shape : ISupportMap, IListIndex, IDynamicTreeProxy, IIdentityObject
     {
         int IListIndex.ListIndex { get; set; } = -1;
 
@@ -72,7 +72,7 @@ namespace Jitter2.Collision.Shapes
         /// <summary>
         /// The instance of <see cref="RigidBody"/> to which this shape is attached.
         /// </summary>
-        [State]
+        [State(IsLateReference = true)]
         public RigidBody RigidBody { get; private set; }
 
         /// <summary>
@@ -106,6 +106,8 @@ namespace Jitter2.Collision.Shapes
         int IDynamicTreeProxy.NodePtr { get; set; }
 
         public virtual JVector Velocity => RigidBody != null ? RigidBody.Velocity : JVector.Zero;
+
+        public long Id => ShapeId;
 
         /// <summary>
         /// Updates the mass and inertia properties, as well as the world bounding box. This method should be

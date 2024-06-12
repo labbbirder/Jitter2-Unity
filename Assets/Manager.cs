@@ -9,11 +9,13 @@ using Jitter2.LinearMath;
 using Jitter2.Sync;
 using Jitter2.Unity;
 using Sirenix.OdinInspector;
+using TMPro;
 using UnityEngine;
 using Random = LSMath.Random;
 
 public class Manager : MonoBehaviour
 {
+    public TextMeshProUGUI text;
     Random rand = new();
     [ShowInInspector]
     World world1;
@@ -39,6 +41,7 @@ public class Manager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        Application.targetFrameRate = -1;
         world1 = CreateInitialWorld("world1");
         world2 = CreateInitialWorld("world2");
         Rb1 = world1.RigidBodies;
@@ -86,25 +89,43 @@ public class Manager : MonoBehaviour
         // };
         world1.Step(0.02f, false);
     }
-    SyncContext ctx = new();
+
+    void DroppingBoxesUpdate()
+    {
+        if (rand.Norm01() > 0.9f)
+        {
+            var go = new GameObject();
+            var rb = go.AddComponent<JRigidBody>();
+            var box = go.AddComponent<JBoxCollider>();
+            go.transform.position = new Vector3(rand.Range(-1, 1), 0, rand.Range(-1, 1));
+            rb.CreateBody(world1);
+            text.text = $"{world1.RigidBodies.Active} / {world1.RigidBodies.Count}";
+        }
+    }
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            new SyncContext().SyncFrom(ref world2, world1);
+        }
         if (Input.GetKeyDown(KeyCode.R))
         {
-            world1 = new SyncContext().SyncFrom(world1, world2);
+            var ctx = new SyncContext();
+            ctx.SyncFrom(ref world1, world2);
             world1.Step(0.02f, false);
             world1.Step(0.02f, false);
-            world1.Step(0.02f, false);
-            world1.Step(0.02f, false);
-            world1.Step(0.02f, false);
-            var vel = JVector.Zero;
-            foreach (var rb in world1.RigidBodies)
-            {
-                vel += rb.Velocity;
-            }
-            print(vel);
             // VisitAndCompare(world1, world2);
         }
+        if (Input.GetKey(KeyCode.D))
+        {
+            var go = new GameObject();
+            var rb = go.AddComponent<JRigidBody>();
+            var box = go.AddComponent<JBoxCollider>();
+            go.transform.position = new Vector3(rand.Range(-1, 1), 0, rand.Range(-1, 1));
+            rb.CreateBody(world1);
+        }
+        // DroppingBoxesUpdate();
+        text.text = $"{world1.RigidBodies.Active} / {world1.RigidBodies.Count}";
     }
     HashSet<object> lut = new();
     void VisitAndCompare(object a, object b, string path = "")

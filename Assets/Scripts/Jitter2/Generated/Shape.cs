@@ -17,12 +17,19 @@ namespace Jitter2.Collision.Shapes
             ;(this as ISyncStageReceiver).OnEnterStage(0, another, ctx);
                         
             this.ShapeId = other.ShapeId;
-            this.RigidBody = ctx.SyncFrom(RigidBody, other.RigidBody);
             this.WorldBoundingBox = other.WorldBoundingBox;
             this.Inertia = other.Inertia;
             this.GeometricCenter = other.GeometricCenter;
             this.Mass = other.Mass;
             (this as IDynamicTreeProxy).NodePtr = (other as IDynamicTreeProxy).NodePtr;
         }
+        
+        public virtual void ReferencePhaseSyncFrom(ISync another, SyncContext ctx){
+            
+            var other = another as Shape;
+            
+            this.RigidBody = ctx.SyncFrom(RigidBody, other.RigidBody);
+        }
+                    
     }
 }

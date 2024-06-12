@@ -6,16 +6,17 @@ namespace Jitter2.Dynamics
 {
     partial class RigidBody : ISync, ISyncStageReceiver
     {
-        RigidBody() {}
-        
-        public  ISync CreateSimilar(SyncContext ctx) => new RigidBody();
-                
-        public  void SyncFrom(ISync another, SyncContext ctx){
-            
+        RigidBody() { }
+
+        public ISync CreateSimilar(SyncContext ctx) => new RigidBody();
+
+        public void SyncFrom(ISync another, SyncContext ctx)
+        {
+
             var other = another as RigidBody;
-            
-            ;(this as ISyncStageReceiver).OnEnterStage(0, another, ctx);
-                        
+
+            ; (this as ISyncStageReceiver).OnEnterStage(0, another, ctx);
+
             this.RigidBodyId = other.RigidBodyId;
             this.Friction = other.Friction;
             this.Restitution = other.Restitution;
@@ -23,13 +24,6 @@ namespace Jitter2.Dynamics
             this.AffectedByGravity = other.AffectedByGravity;
             this.EnableSpeculativeContacts = other.EnableSpeculativeContacts;
             this.handle = ctx.SyncFromExtra(other.handle, RIGID_BODY_DATA);
-            if (ctx.GetOrCreate(shapes, other.shapes,out var _shapes))
-                ctx.SyncFromExtra(_shapes, other.shapes);
-            this.island = ctx.SyncFrom(island, other.island);
-            if (ctx.GetOrCreate(connections, other.connections,out var _connections))
-                ctx.SyncFromExtra(_connections, other.connections);
-            if (ctx.GetOrCreate(contacts, other.contacts,out var _contacts))
-                ctx.SyncFromExtra(_contacts, other.contacts);
             this.islandMarker = other.islandMarker;
             this.sleepTime = other.sleepTime;
             this.inactiveThresholdLinearSq = other.inactiveThresholdLinearSq;
@@ -41,5 +35,24 @@ namespace Jitter2.Dynamics
             this.inverseMass = other.inverseMass;
             this.hashCode = other.hashCode;
         }
+
+        public void ReferencePhaseSyncFrom(ISync another, SyncContext ctx)
+        {
+
+            var other = another as RigidBody;
+
+            if (ctx.GetOrCreate(shapes, other.shapes, out var _shapes))
+                ctx.SyncFromExtra(_shapes, other.shapes);
+            this.island = ctx.SyncFrom(island, other.island);
+            if(this.island != null && island.Id == -1)
+            {
+                this.island = ctx.SyncFrom(island, other.island);
+            }
+            if (ctx.GetOrCreate(connections, other.connections, out var _connections))
+                ctx.SyncFromExtra(_connections, other.connections);
+            if (ctx.GetOrCreate(contacts, other.contacts, out var _contacts))
+                ctx.SyncFromExtra(_contacts, other.contacts);
+        }
+
     }
 }

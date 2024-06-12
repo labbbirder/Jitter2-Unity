@@ -31,9 +31,9 @@ namespace Jitter2.Collision
     /// <summary>
     /// Represents an island, which is a collection of bodies that are either directly or indirectly in contact with each other.
     /// </summary>
-    public sealed partial class Island : IListIndex
+    public sealed partial class Island : IListIndex, IIdentityObject
     {
-        [State]
+        [State(IsLateReference = true)]
         internal readonly HashList<RigidBody> bodies = new();
         [State]
         internal bool MarkedAsActive;
@@ -46,6 +46,8 @@ namespace Jitter2.Collision
         public ReadOnlyHashList<RigidBody> Bodies => new ReadOnlyHashList<RigidBody>(bodies);
 
         int IListIndex.ListIndex { get; set; } = -1;
+
+        public long Id => (this as IListIndex).ListIndex;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Island"/> class.

@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using UnityEditor;
 using UnityEngine;
 
@@ -29,11 +30,15 @@ namespace Jitter2.Unity
             };
         }
 
-        [DrawGizmo(GizmoType.InSelectionHierarchy | GizmoType.Active)]
+        [DrawGizmo(GizmoType.Selected | GizmoType.Active | GizmoType.NonSelected)]
         static void DrawRigidBodyGizmos(JRigidBody rb, GizmoType gizmoType)
         {
-            rb.UpdateTransform(rb.body);
-            rb.body.DebugDraw(JitterGizmosDrawer.Instance);
+            if (!Application.isPlaying)
+            {
+                rb.UpdateTransform(rb.body);
+                rb.body.DebugDraw(JitterGizmosDrawer.Instance);
+            }
         }
     }
 }
+#endif
