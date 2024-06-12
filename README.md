@@ -6,10 +6,10 @@ This edition make it compatible with Unity3D, ~~with a few acceptable disadvanta
 
 More features are in development:
 
-* state load/restore (most for local machine)
-* world serialization(most for remote machine)
-* deterministic math (reside in specific branch)
-* more physics-world-authoring components in Unity editor side
+- [x] state load/restore (most for local machine)
+- [ ] world serialization(most for remote machine)
+- [ ] deterministic math (reside in specific branch)
+- [x] more physics-world-authoring components in Unity editor side
 
 
 ## Why Jitter2
