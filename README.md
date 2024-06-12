@@ -10,7 +10,8 @@ More features are in development:
 - [ ] world serialization(most for remote machine)
 - [ ] deterministic math (reside in specific branch)
 - [x] more physics-world-authoring components in Unity editor side
-- [ ] 2D mode
+- [ ] Compatible with the default Unity collision layer mask
+- [x] 2D mode
 
 ## Why Jitter2
 
