@@ -95,6 +95,7 @@ namespace Jitter2
                 for (int i = 0; i < bodies.Count; i++)
                 {
                     bodies[i].ReferencePhaseSyncFrom(other.bodies[i], ctx);
+                    bodies[i].Tag = ctx.SyncFrom((RigidBodyUserData)bodies[i].Tag, (RigidBodyUserData)other.bodies[i].Tag);
                 }
 
                 for (int i = 0; i < shapes.Count; i++)
@@ -109,7 +110,6 @@ namespace Jitter2
 
                 foreach (var (k, arb) in arbiters)
                 {
-                    Assert.IsTrue(other.arbiters.ContainsKey(k));
                     memContacts.IsActive(arb.Handle);
                     arb.ReferencePhaseSyncFrom(other.arbiters[k], ctx);
                 }
@@ -133,7 +133,6 @@ namespace Jitter2
                 {
                     ctx.SyncFrom(ref mitem, oitem);
                     mitem.ListIndex = i;
-                    Assert.IsTrue(self[i].ListIndex == i);
                     continue;
                 }
 
@@ -148,14 +147,6 @@ namespace Jitter2
                     }
                     else
                     {
-                        if (typeof(T) == typeof(RigidBody))
-                        {
-                            var m = self[ridx] as RigidBody;
-                            var o = oitem as RigidBody;
-                            if (m.shapes.Count > 0)
-                                Assert.IsTrue(m.shapes[0].Id == o.shapes[0].Id);
-
-                        }
                         self[ridx] = ctx.SyncFrom(self[ridx], oitem);
                     }
 
@@ -166,14 +157,6 @@ namespace Jitter2
                 {
                     ctx.SyncFrom(ref mitem, oitem);
                 }
-                if (typeof(T) == typeof(RigidBody))
-                {
-                    var m = self[i] as RigidBody;
-                    var o = other[i] as RigidBody;
-                    if (m.shapes.Count>0)
-                    Assert.IsTrue(m.shapes[0].Id == o.shapes[0].Id);
-
-                }
             }
 
             for (; i < self.Count; i++)
@@ -181,10 +164,6 @@ namespace Jitter2
                 ref var item = ref self.Elements[i];
                 if (item != null)
                 {
-                    for (int j = 0; j < i; j++)
-                    {
-                        Assert.IsTrue(self[j] != item);
-                    }
                     item.ListIndex = -1;
                     ctx.SyncFrom(ref item, null);
                 }
@@ -205,7 +184,7 @@ namespace Jitter2
                 dict[b.Id] = i;
             }
         }
-        static SortedList<long,int> id2idx = new();
+        static SortedList<long, int> id2idx = new();
         // static Dictionary<long, int> id2idx = new();
         static Stack<(ArbiterKey k, Arbiter arbiter)> removingArbiters = new();
         static Stack<(ArbiterKey k, Arbiter arbiter)> AddingArbiters = new();

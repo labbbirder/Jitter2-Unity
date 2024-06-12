@@ -10,6 +10,7 @@ namespace Jitter2.Unity
     {
         public bool isStatic;
         public bool isBullet;
+        public bool useGravity = true;
         public float mass = 1;
         public float friction = 0.2f;
         public float restitution = 0;
@@ -23,6 +24,10 @@ namespace Jitter2.Unity
             UpdateProperties(body);
             UpdateShapes(body);
             UpdateTransform(body);
+            body.Tag = new RigidBodyUserData()
+            {
+                Layer = gameObject.layer,
+            };
             return body;
         }
 
@@ -45,6 +50,7 @@ namespace Jitter2.Unity
             rb.IsStatic = isStatic;
             rb.EnableSpeculativeContacts = isBullet;
             rb.Friction = friction;
+            rb.AffectedByGravity = useGravity;
             rb.Restitution = restitution;
             rb.Data.hasTransformConstraints = rotationConstraints != Vector3Int.one || translationConstraints != Vector3Int.one;
             rb.Data.RotationConstraint = new JVector(rotationConstraints.x, rotationConstraints.y, rotationConstraints.z);
