@@ -170,7 +170,7 @@ namespace Jitter2.Collision.Shapes
             UpdateShape();
         }
 
-        private ConvexHullShape()
+        protected ConvexHullShape()
         {
         }
 

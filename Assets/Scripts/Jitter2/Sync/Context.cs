@@ -429,7 +429,7 @@ namespace Jitter2.Sync
             if (dst is null || DLinked.Contains(dst))
             {
 
-                if (RaiseOnCreate) throw new();
+                // if (RaiseOnCreate) throw new();
                 // return from pool
                 if (!RentFromPool<T>(DFree, out dst))
                 {

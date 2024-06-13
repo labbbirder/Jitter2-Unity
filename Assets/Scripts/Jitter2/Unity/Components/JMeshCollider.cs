@@ -1,3 +1,4 @@
+using System.Linq;
 using Jitter2.Collision.Shapes;
 using Jitter2.LinearMath;
 using UnityEngine;
@@ -13,7 +14,7 @@ namespace Jitter2.Unity
         public override Shape CreateShape()
         {
             if (mesh == null) return new ConvexHullShape(new());
-            return new ConvexHullShape(mesh.ToTriangleList());
+            return new ConvexHullShape(mesh.ToTriangleList().First());
         }
 
         void Reset()

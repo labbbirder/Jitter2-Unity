@@ -23,7 +23,7 @@ namespace Jitter2.Unity
                     body.Refresh();
                 }
                 
-                var bodies2D = FindObjectsByType<JRigidBody>(FindObjectsSortMode.None);
+                var bodies2D = FindObjectsByType<JRigidBody2D>(FindObjectsSortMode.None);
                 foreach (var body in bodies2D)
                 {
                     body.Refresh();

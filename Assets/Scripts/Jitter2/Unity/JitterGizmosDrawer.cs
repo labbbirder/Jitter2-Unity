@@ -13,6 +13,7 @@ public class JitterGizmosDrawer : IDebugDrawer
         Gizmos.matrix = Matrix4x4.TRS(p.ToVector(), ori.ToQuaternion(), Vector3.one);
         Gizmos.color = color;
         Gizmos.DrawWireCube(Vector3.zero, size.ToVector());
+        Gizmos.matrix = Matrix4x4.identity;
     }
 
     public void DrawPoint(in JVector p)
@@ -32,6 +33,7 @@ public class JitterGizmosDrawer : IDebugDrawer
         Gizmos.matrix = Matrix4x4.TRS(p.ToVector(), ori.ToQuaternion(), Vector3.one);
         Gizmos.color = color;
         Gizmos.DrawWireSphere(Vector3.zero, radius);
+        Gizmos.matrix = Matrix4x4.identity;
     }
 
     public void DrawTriangle(in JVector pA, in JVector pB, in JVector pC)

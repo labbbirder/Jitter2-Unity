@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Jitter2.Collision.Shapes;
 using UnityEngine;
 
@@ -9,8 +10,10 @@ namespace Jitter2.Unity2D
     {
         public float radius = 1;
 
-        public override Shape CreateShape()
-            => new SphereShape(radius);
+        public override IEnumerable<Shape> CreateShape()
+        {
+            yield return new SphereShape(radius);
+        }
     }
 }
 

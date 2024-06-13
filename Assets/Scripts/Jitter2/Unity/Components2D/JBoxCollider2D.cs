@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Jitter2.Collision.Shapes;
 using Jitter2.LinearMath;
 using Jitter2.Unity;
@@ -10,8 +11,10 @@ namespace Jitter2.Unity2D
     public class JBoxCollider2D : JCollider2DBase
     {
         public Vector2 size = Vector3.one;
-        public override Shape CreateShape()
-            => new BoxShape(new JVector(size.x, size.y, 1));
+        public override IEnumerable<Shape> CreateShape()
+        {
+            yield return new BoxShape(new JVector(size.x, size.y, 1));
+        }
 
     }
 }

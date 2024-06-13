@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Diagnostics;
 using Jitter2.Collision.Shapes;
 using Jitter2.LinearMath;
@@ -13,19 +14,27 @@ namespace Jitter2.Unity2D
 
         public JRigidBody2D RigidBody => GetComponent<JRigidBody2D>();
 
-        public abstract Shape CreateShape();
+        public abstract IEnumerable<Shape> CreateShape();
 
-        public Shape CreateTransformedShape()
+        public IEnumerable<Shape> CreateTransformedShape()
         {
-            var shape = CreateShape();
-            if (center == Vector2.zero && rotation == 0)
+            var hasTransform = center != Vector2.zero || rotation != 0;
+            if (!hasTransform)
             {
-                return shape;
+                foreach (var shape in CreateShape())
+                {
+                    yield return shape;
+                }
             }
-
-            var translation = new JVector(center.x, center.y, 0);
-            var orientation = Matrix4x4.Rotate(Quaternion.AngleAxis(rotation, new(0, 0, 1))).ToJMatrix();
-            return new TransformedShape(shape, translation, orientation);
+            else
+            {
+                foreach (var shape in CreateShape())
+                {
+                    var translation = new JVector(center.x, center.y, 0);
+                    var orientation = Matrix4x4.Rotate(Quaternion.AngleAxis(rotation, new(0, 0, 1))).ToJMatrix();
+                    yield return new TransformedShape(shape, translation, orientation);
+                }
+            }
         }
 
         [Conditional("UNITY_EDITOR")]

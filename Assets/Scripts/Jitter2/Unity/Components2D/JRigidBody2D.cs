@@ -64,7 +64,10 @@ namespace Jitter2.Unity2D
             rb.RemoveShape(rb.shapes, false);
             foreach (var shape in GetComponents<JCollider2DBase>())
             {
-                rb.AddShape(shape.CreateTransformedShape(), false);
+                foreach (var s in shape.CreateTransformedShape())
+                {
+                    rb.AddShape(s, false);
+                }
             }
         }
 
