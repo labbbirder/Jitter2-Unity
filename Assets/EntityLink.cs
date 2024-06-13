@@ -17,6 +17,11 @@ public class EntityLink : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if ((rb as IListIndex).ListIndex == -1)
+        {
+            Destroy(gameObject);
+            return;
+        }
         transform.position = rb.Position.ToVector();
         transform.rotation = rb.Orientation.ToQuaternion();
     }
