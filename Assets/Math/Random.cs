@@ -28,6 +28,7 @@ namespace LSMath
         /// <returns></returns>
         public int Range(int from, int to)
         {
+            if (from == to) return from;
             return (Int31() % (to - from)) + from;
         }
 
