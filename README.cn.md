@@ -11,7 +11,7 @@
 - [x] 物理世界状态同步
 - [ ] 物理世界状态序列化
 - [ ] 确定性数学计算
-- [x] 丰富的Unity端组件类型
+- [x] 完善的Unity端组件类型
 - [x] 兼容Unity默认的Collider Mask
 - [x] 兼容Unity的constraints选项
 - [x] Scene View下的Gizmos展示
@@ -22,7 +22,16 @@
 
 ## Why Jitter2
 
-* Coded in pure C#, without extra effort to migrate from.
-* Frequently accessed data is compact in memory compared to Jitter1, which benefits from spatial local optimization.
-* Neat and easy to understand. Faster for users to put their hands to introduce more features, and make things under their control.
-* Well optimized in data structure and algorithms.
+* 纯C#编写，接入简单
+* 常访问字段在内存中紧凑存放
+* Jitter代码可读性极高，能快速上手，并让物理系统处于掌控中
+* 数据结构和算法高效
+
+## Start With Sample Scene
+
+运行两个World，两两之间可以同步状态
+
+* 按小键盘加号，生成实体
+* 按小键盘减号，随机删除实体
+* 按S，记录当前世界状态
+* 按R，重置世界状态

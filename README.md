@@ -24,3 +24,12 @@ More features are in development:
 * Frequently accessed data is compact in memory compared to Jitter1, which benefits from spatial local optimization.
 * Neat and easy to understand. Faster for users to put their hands to introduce more features, and make things under their control.
 * Well optimized in data structure and algorithms.
+
+## Start With Sample Scene
+
+There are two physics worlds running in the scene, one of them can sync from another.
+
+* press keypad plus to spawn physics body
+* press keypad minu to destroy physics body randomly
+* press S to save the current world state
+* press R to reset the current world state
