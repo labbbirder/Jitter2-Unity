@@ -66,7 +66,7 @@ public class Manager : MonoBehaviour
         {
             rb.CreateBody(world);
         }
-        
+
         world.Step(STEP_TIME, false);
         world.Step(STEP_TIME, false);
         world.Step(STEP_TIME, false);
@@ -97,7 +97,12 @@ public class Manager : MonoBehaviour
         if (Input.GetKey(KeyCode.KeypadMinus))
         {
             var idx = rand.Range(0, world1.RigidBodies.Count);
-            world1.Remove(world1.RigidBodies[idx]);
+            var rb = world1.RigidBodies[idx];
+            if (rb != world1.NullBody)
+            {
+                world1.Remove(rb);
+                Assert.IsTrue((rb as IListIndex).ListIndex == -1);
+            }
         }
 
         if (Input.GetKey(KeyCode.KeypadPlus))
@@ -106,7 +111,9 @@ public class Manager : MonoBehaviour
             var rb = go.AddComponent<JRigidBody>();
             var box = go.AddComponent<JBoxCollider>();
             go.transform.position = new Vector3(rand.Range(-1, 1), 0, rand.Range(-1, 1));
-            rb.CreateBody(world1);
+            var link = go.AddComponent<EntityLink>();
+            var body = rb.CreateBody(world1);
+            link.rb = body;
         }
 
         text.text = $"{world1.RigidBodies.Active} / {world1.RigidBodies.Count}";
