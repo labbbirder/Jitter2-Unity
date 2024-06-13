@@ -302,7 +302,7 @@ namespace Jitter2.Sync
             // Assert src != null && dst !=null
             if (!needSync) return false;
 
-            SetCache(dst, src);
+            SetCache(res, src);
 
             return true;
         }
@@ -317,7 +317,7 @@ namespace Jitter2.Sync
             // Assert src != null && dst !=null
             if (!needSync) return false;
 
-            SetCache(dst, src);
+            SetCache(res, src);
             return true;
         }
 
@@ -431,7 +431,7 @@ namespace Jitter2.Sync
 
                 // if (RaiseOnCreate) throw new();
                 // return from pool
-                if (!RentFromPool<T>(DFree, out dst))
+                if (!RentFromPool<T>(DFree, type, out dst))
                 {
                     // create a new one
                     if (src is ISync ss1)
@@ -473,15 +473,15 @@ namespace Jitter2.Sync
 
         static void RemoveFromPool(Dictionary<Type, HashSet<object>> DFree, object item)
         {
+            Assert.IsTrue(item != null);
             if (DFree.TryGetValue(item.GetType(), out var set))
             {
                 set.Remove(item);
             }
         }
 
-        static bool RentFromPool<T>(Dictionary<Type, HashSet<object>> DFree, out T item) where T : class
+        static bool RentFromPool<T>(Dictionary<Type, HashSet<object>> DFree,Type type, out T item) where T : class
         {
-            var type = typeof(T);
             if (!DFree.TryGetValue(type, out var set))
             {
                 item = default;
