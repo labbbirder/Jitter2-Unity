@@ -25,18 +25,18 @@ namespace Jitter2
 
                 foreach (ref var ele in memContacts.Elements)
                 {
-                    ele.Body1.Pointer += ctx.GetMemoryOffset(RIGID_BODY_DATA);
-                    ele.Body2.Pointer += ctx.GetMemoryOffset(RIGID_BODY_DATA);
+                    ele.Body1 = ctx.SyncFromExtra(ele.Body1,RIGID_BODY_DATA);
+                    ele.Body2 = ctx.SyncFromExtra(ele.Body2,RIGID_BODY_DATA);
                 }
                 foreach (ref var ele in memConstraints.Elements)
                 {
-                    ele.Body1.Pointer += ctx.GetMemoryOffset(RIGID_BODY_DATA);
-                    ele.Body2.Pointer += ctx.GetMemoryOffset(RIGID_BODY_DATA);
+                    ele.Body1 = ctx.SyncFromExtra(ele.Body1,RIGID_BODY_DATA);
+                    ele.Body2 = ctx.SyncFromExtra(ele.Body2,RIGID_BODY_DATA);
                 }
                 foreach (ref var ele in memSmallConstraints.Elements)
                 {
-                    ele.Body1.Pointer += ctx.GetMemoryOffset(RIGID_BODY_DATA);
-                    ele.Body2.Pointer += ctx.GetMemoryOffset(RIGID_BODY_DATA);
+                    ele.Body1 = ctx.SyncFromExtra(ele.Body1,RIGID_BODY_DATA);
+                    ele.Body2 = ctx.SyncFromExtra(ele.Body2,RIGID_BODY_DATA);
                 }
 
                 brokenArbiters.Clear();
