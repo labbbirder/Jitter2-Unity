@@ -13,20 +13,29 @@ namespace Jitter2.Unity2D
     [RequireComponent(typeof(JRigidBody2D))]
     public class JPolygonCollider2D : JCollider2DBase
     {
+        [Header("Create From...")]
         public Sprite sprite;
+        public PolygonCollider2D poly2d;
         // [HideInInspector]
         public List<JTriangle> triangles = new();
         public override IEnumerable<Shape> CreateShape()
         {
-            if (sprite == null)
-                yield break;
-
-            foreach (var tl in sprite.ToTriangleList())
+            if (sprite)
             {
-                Assert.IsTrue(tl.Count > 0);
-                yield return new Mesh2DShape(tl);
+                foreach (var tl in sprite.ToTriangleList())
+                {
+                    Assert.IsTrue(tl.Count > 0);
+                    yield return new Mesh2DShape(tl);
+                }
             }
-
+            else if (poly2d)
+            {
+                foreach (var tl in poly2d.ToTriangleList())
+                {
+                    Assert.IsTrue(tl.Count > 0);
+                    yield return new Mesh2DShape(tl);
+                }
+            }
         }
 
         void OnValidate()

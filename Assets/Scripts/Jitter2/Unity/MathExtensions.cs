@@ -81,26 +81,15 @@ namespace Jitter2.LinearMath
             }
         }
 
-        public static IEnumerable<List<JTriangle>> ToTriangleList(this Sprite sprite)
+        public static IEnumerable<List<JTriangle>> ToTriangleList(this PolygonCollider2D poly2d)
         {
-            var poly2d = EditorTool.GetSingleton<PolygonCollider2D>();
-
-            // feed pathes to PolygonCollider2D 
-            var pathCount = sprite.GetPhysicsShapeCount();
-            poly2d.pathCount = pathCount;
-            for (int i = 0; i < pathCount; i++)
-            {
-                var vertices = new List<Vector2>();
-                sprite.GetPhysicsShape(i, vertices);
-                poly2d.SetPath(i, vertices);
-            }
-
             // split pathes to hull shape
             var group = new PhysicsShapeGroup2D();
             var hullCount = poly2d.GetShapes(group);
 
             var vertices2D = new List<Vector2>();
             var shapes = new List<PhysicsShape2D>();
+            var matInv = poly2d.transform.localToWorldMatrix.inverse;
             group.GetShapeData(shapes, vertices2D);
 
             // transform hull to triangles
@@ -116,13 +105,30 @@ namespace Jitter2.LinearMath
                 for (int i = 0; i < shape.vertexCount - 2; i++)
                 {
                     triangles.Add(new JTriangle(
-                        vertices2D[shape.vertexStartIndex].ToVector(),
-                        vertices2D[shape.vertexStartIndex + i + 1].ToVector(),
-                        vertices2D[shape.vertexStartIndex + i + 2].ToVector()
+                        matInv.MultiplyPoint(vertices2D[shape.vertexStartIndex]).ToVector(),
+                        matInv.MultiplyPoint(vertices2D[shape.vertexStartIndex + i + 1]).ToVector(),
+                        matInv.MultiplyPoint(vertices2D[shape.vertexStartIndex + i + 2]).ToVector()
                     ));
                 }
                 yield return triangles;
             }
+        }
+
+        public static IEnumerable<List<JTriangle>> ToTriangleList(this Sprite sprite)
+        {
+            var poly2d = EditorTool.GetSingleton<PolygonCollider2D>();
+
+            // feed pathes to PolygonCollider2D 
+            var pathCount = sprite.GetPhysicsShapeCount();
+            poly2d.pathCount = pathCount;
+            for (int i = 0; i < pathCount; i++)
+            {
+                var vertices = new List<Vector2>();
+                sprite.GetPhysicsShape(i, vertices);
+                poly2d.SetPath(i, vertices);
+            }
+
+            return poly2d.ToTriangleList();
         }
 
     }
