@@ -53,6 +53,8 @@ namespace Jitter2.Unity
         [DrawGizmo(GizmoType.Selected | GizmoType.Active | GizmoType.NonSelected)]
         static void DrawRigidBody2DGizmos(JRigidBody2D rb, GizmoType gizmoType)
         {
+            var item = rb.body as IListIndex;
+            if (item.ListIndex == -1) return;
             if (!Application.isPlaying)
             {
                 rb.UpdateTransform(rb.body);

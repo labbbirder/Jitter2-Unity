@@ -1,0 +1,10 @@
+{
+  "name": "com.bbbirder.Jitter2",
+  "displayName": "Jitter2",
+  "description": "Unity版Jitter2",
+  "version": "0.0.1",
+  "hideInEditor": false,
+  "author": "bbbirder <502100554@qq.com>",
+  "dependencies": {
+  }
+}
