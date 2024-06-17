@@ -16,7 +16,7 @@ namespace Jitter2.Sync
     partial class SyncContext
     {
 
-        [InitializeOnLoadMethod]
+        // [InitializeOnLoadMethod]
         static void GenerateAll()
         {
             const string output = "Assets/Scripts/Jitter2/Generated";
