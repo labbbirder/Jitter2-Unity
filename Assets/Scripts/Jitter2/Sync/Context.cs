@@ -255,6 +255,7 @@ namespace Jitter2.Sync
             }
 
             // Assert src != null
+            var type = src.GetType();
 
             if (S2D.TryGetValue(src, out var v))
             {
@@ -265,18 +266,12 @@ namespace Jitter2.Sync
             // we need a new dst
             if (dst is null || DLinked.Contains(dst))
             {
-                // return from pool
-                if (DFree.Count > 0)
+
+                if (!RentFromPool<T>(DFree, type, out res))
                 {
-                    res = DFree.First() as T;
-                    return (false, true);
-                }
-                // create a new one
-                else
-                {
-                    res = null;
                     return (true, true);
                 }
+                return (false, true);
             }
             else
             {
@@ -494,7 +489,7 @@ namespace Jitter2.Sync
                 return false;
             }
 
-            item = set.First() as T;
+            item = set.Last() as T;
             set.Remove(item);
             return true;
         }
